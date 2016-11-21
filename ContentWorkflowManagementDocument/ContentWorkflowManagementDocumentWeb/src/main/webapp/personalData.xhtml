@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="personalDataForm">
+			<p:growl id="growl" sticky="true" showDetail="true" />
+			<center>
+				<br />
+				<h:outputText value="Personal Data" />
+
+				<p></p>
+				<p:panelGrid id="grid" columns="2">
+					<p:outputLabel for="userRole" value="User role" />
+					<p:outputLabel id="userRole"
+						value="#{personalDataBean.user.userRole}" />
+
+					<p:outputLabel for="firstName" value="First Name" />
+					<p:outputLabel id="firstName"
+						value="#{personalDataBean.user.firstName}" />
+
+					<p:outputLabel for="lastName" value="Last Name" />
+					<p:outputLabel id="lastName"
+						value="#{personalDataBean.user.lastName}" />
+
+					<p:outputLabel for="email" value="Email" />
+					<p:outputLabel id="email" value="#{personalDataBean.user.email}" />
+				</p:panelGrid>
+				<p></p>
+				<p:commandButton
+					update=":mainForm:personalDataForm:personalDataDetail"
+					oncomplete="PF('personalDataDialog').show()" icon="ui-icon-pencil"
+					title="Edit">
+					<f:setPropertyActionListener value="#{personalDataBean.user}"
+						target="#{personalDataBean.user}" />
+				</p:commandButton>
+
+			</center>
+			<p></p>
+
+			<!-- pop up for update -->
+			<p:dialog header="PersonalData" id="dialog"
+				widgetVar="personalDataDialog" showEffect="fade" resizable="false"
+				hideEffect="explode">
+				<p:outputPanel id="personalDataDetail">
+					<p:panelGrid columns="2" id="updatePanel"
+						columnClasses="label,value">
+						<p:outputLabel for="userNameEdit" value="User name" />
+						<p:inputText id="userNameEdit"
+							value="#{personalDataBean.user.userName}">
+							<f:validator validatorId="userNameValidator" />
+						</p:inputText>
+
+						<p:outputLabel for="firstNameEdit" value="First name" />
+						<p:inputText id="firstNameEdit"
+							value="#{personalDataBean.user.firstName}" required="true">
+							<f:validator validatorId="firstNameValidator" />
+						</p:inputText>
+
+						<p:outputLabel for="lastNameEdit" value="Last name" />
+						<p:inputText id="lastNameEdit"
+							value="#{personalDataBean.user.lastName}" required="true">
+							<f:validator validatorId="lastNameValidator" />
+						</p:inputText>
+
+						<p:outputLabel for="emailEdit" value="Email" />
+						<p:inputText id="emailEdit" value="#{personalDataBean.user.email}"
+							required="true">
+							<f:validator validatorId="emailValidator" />
+						</p:inputText>
+
+						<p:outputLabel for="newPassword" value="New Password" />
+						<p:password id="newPassword" value="#{personalDataBean.password1}"
+							feedback="true">
+						</p:password>
+
+						<p:outputLabel for="cNewPassword" value="Confirm Password" />
+						<p:password id="cNewPassword"
+							value="#{personalDataBean.password2}" feedback="true">
+						</p:password>
+
+						<p:outputLabel for="password" value="Current password" />
+						<p:password id="password" value="#{personalDataBean.password}"
+							for="confirm" required="true">
+							<f:validator validatorId="passwordValidator" />
+						</p:password>
+
+					</p:panelGrid>
+
+					<h:outputText value="The fields marked with * are mandatory" />
+					<p></p>
+					<center>
+						<p:commandButton id="update" value="Edit data"
+							onsuccess="PF('personalDataDialog').hide()"
+							actionListener="#{personalDataBean.confirmChanges}"
+							update="mainForm:personalDataForm:grid mainForm:personalDataForm:growl mainForm:personalDataForm:dialog" />
+					</center>
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
