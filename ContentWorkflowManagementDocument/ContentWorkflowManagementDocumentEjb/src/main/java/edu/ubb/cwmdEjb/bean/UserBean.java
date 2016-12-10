@@ -49,7 +49,7 @@ public class UserBean implements Serializable, UserBeanInterface {
 
 	@Override
 	public void insertUser(UserDTO userDTO) throws RemoteException {
-		User user = userAssembler.dtoToModel(userDTO);
+		User user = userAssembler.dtoToModelSimple(userDTO);
 		//user.setPassword(PasswordEncrypter.getGeneratedHashedPassword(user.getPassword(), ""));
 		try {
 			userDao.insertUser(user);

@@ -36,15 +36,19 @@ public class UserAssembler {
 
 			ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
 			List<ActiveFlow> activeFlows = new ArrayList<>();
-			for (ActiveFlowDTO activeFlow : dto.getActiveFlows()) {
-				activeFlows.add(activeFlowAssembler.dtoToModelSimple(activeFlow));
+			if (dto.getActiveFlows() != null) {
+				for (ActiveFlowDTO activeFlow : dto.getActiveFlows()) {
+					activeFlows.add(activeFlowAssembler.dtoToModelSimple(activeFlow));
+				}
 			}
 			user.setActiveFlows(activeFlows);
 
 			DocumentAssembler documentAssembler = new DocumentAssembler();
 			List<Document> documents = new ArrayList<>();
-			for (DocumentDTO document : dto.getDocuments()) {
-				documents.add(documentAssembler.dtoToModelSimple(document));
+			if (dto.getDocuments() != null) {
+				for (DocumentDTO document : dto.getDocuments()) {
+					documents.add(documentAssembler.dtoToModelSimple(document));
+				}
 			}
 			user.setDocuments(documents);
 

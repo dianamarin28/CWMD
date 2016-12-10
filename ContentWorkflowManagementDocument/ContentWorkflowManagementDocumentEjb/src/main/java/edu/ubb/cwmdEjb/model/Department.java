@@ -13,7 +13,7 @@ public class Department extends BaseEntity {
 
 	private static final long serialVersionUID = -8114123503390675522L;
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false,unique = true)
 	private String name;
 
 	@OneToMany(mappedBy = "department")
