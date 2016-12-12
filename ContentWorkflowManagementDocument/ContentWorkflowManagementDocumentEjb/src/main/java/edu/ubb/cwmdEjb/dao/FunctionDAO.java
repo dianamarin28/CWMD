@@ -19,7 +19,7 @@ import edu.ubb.cwmdEjb.model.Function;
 @Stateless(name = "FunctionDAO", mappedName = "ejb/FunctionDAO")
 public class FunctionDAO {
 	
-	private static Logger logger = LoggerFactory.getLogger(UserDAO.class);
+	private static Logger logger = LoggerFactory.getLogger(FunctionDAO.class);
 
 	@PersistenceContext(unitName = "cwmd")
 	private EntityManager entityManager;

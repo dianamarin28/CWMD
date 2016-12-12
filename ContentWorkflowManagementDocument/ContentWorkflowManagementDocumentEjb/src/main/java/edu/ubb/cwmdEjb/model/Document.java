@@ -3,6 +3,7 @@ package edu.ubb.cwmdEjb.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -28,7 +29,7 @@ public class Document extends BaseEntity {
 	@ManyToOne
 	private Template template;
 
-	@OneToMany(mappedBy = "document")
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "document")
 	private List<Version> version;
 
 	@Column(name = "creationDate", nullable = false)

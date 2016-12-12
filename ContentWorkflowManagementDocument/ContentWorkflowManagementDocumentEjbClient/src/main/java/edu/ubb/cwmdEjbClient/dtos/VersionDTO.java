@@ -14,6 +14,8 @@ public class VersionDTO {
 
 	private byte[] fileContent;
 
+	private String status;
+
 	public Long getVersionId() {
 		return versionId;
 	}
@@ -60,6 +62,14 @@ public class VersionDTO {
 
 	public void setFileContent(byte[] fileContent) {
 		this.fileContent = fileContent;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

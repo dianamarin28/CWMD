@@ -44,3 +44,8 @@ INSERT INTO `user` (`email`, `firstName`, `lastName`, `password`, `userName`, `u
 VALUES ('julie@sth.com', 'Julie', 'Ellis', 'julie12', 'julie12', 'READER', 'ploderf', '9');
 INSERT INTO `user` (`email`, `firstName`, `lastName`, `password`, `userName`, `userRole`, `uuid`, `functionId`) 
 VALUES ('jane@sth.com', 'Jane', 'Hunt', 'jane12', 'jane12', 'CONTRIBUTOR', 'ssddeer', '8');
+
+-- used for documnent creation
+INSERT INTO `template` (`name`, `uuid`) VALUES ('template1', 'ttyyuuW');
+INSERT INTO `template` (`name`, `uuid`) VALUES ('template2', 'ttrrttY');
+INSERT INTO `template` (`name`, `uuid`) VALUES ('template3', 'tthhwwT');
