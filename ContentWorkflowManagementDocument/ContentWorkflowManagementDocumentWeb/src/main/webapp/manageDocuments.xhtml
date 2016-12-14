@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="manageDataForm">
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:tabView>
+				<p:tab title="Add document">
+					<p:fileUpload
+						fileUploadListener="#{manageDocumentsBean.handleFileUpload}"
+						mode="advanced" dragDropSupport="false"
+						update="#{p:component('msgs')}" auto="true" fileLimit="1"
+						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
+
+					<h:panelGrid columns="2">
+						<p:outputLabel for="name" value="Name" />
+						<p:inputText id="name" value="#{manageDocumentsBean.name}" />
+
+						<p:outputLabel for="template" value="Template" />
+						<p:selectOneMenu id="template"
+							value="#{manageDocumentsBean.template}"
+							converter="templateConverter">
+							<f:selectItems value="#{manageDocumentsBean.templates}"
+								var="template" itemLabel="#{template.name}"
+								itemValue="#{template}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="docAbstract" value="Abstract" />
+						<p:inputTextarea id="docAbstract"
+							value="#{manageDocumentsBean.docAbstract}" rows="5" cols="30" />
+
+						<p:outputLabel for="keyWords" value="Key Words" />
+						<p:inputTextarea id="keyWords"
+							value="#{manageDocumentsBean.keyWords}" rows="5" cols="30" />
+					</h:panelGrid>
+
+					<h:commandButton value="Insert"
+						action="#{manageDocumentsBean.insertDocument}"></h:commandButton>
+
+				</p:tab>
+				<p:tab title="Update document">
+					
+				</p:tab>
+				<p:tab title="Delete document">
+					
+				</p:tab>
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

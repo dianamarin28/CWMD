@@ -76,9 +76,10 @@ public class ManageUsers implements Serializable {
 		UserDTO user =userBeanInterface.getByUserName(userName);
 		Long depId = user.getFunction().getDepartment().getDepartmentId();
 
+		String departmentName = user.getFunction().getDepartment().getName();
 		userList = userBeanInterface.getUserFromDepartment(depId);
 		
-	functionsList = functionBeanInterface.getFunctions();
+	functionsList = functionBeanInterface.getFunctionsByDepartment(departmentName);
 	}
 
 	public UserDTO getUserById(Long id) {
@@ -157,6 +158,7 @@ public class ManageUsers implements Serializable {
 			}else {
 				userDTO = new UserDTO();
 				userDTO.setFirstName(firstName);
+				userDTO.setFunction(function);
 				userDTO.setLastName(lastName);
 				userDTO.setUserName(userName);
 				userDTO.setPassword(password1);

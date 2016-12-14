@@ -15,12 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.ubb.cwmdEjb.model.Function;
-import edu.ubb.cwmdEjb.model.User;
 
 @Stateless(name = "FunctionDAO", mappedName = "ejb/FunctionDAO")
 public class FunctionDAO {
 	
-	private static Logger logger = LoggerFactory.getLogger(UserDAO.class);
+	private static Logger logger = LoggerFactory.getLogger(FunctionDAO.class);
 
 	@PersistenceContext(unitName = "cwmd")
 	private EntityManager entityManager;
@@ -52,6 +51,21 @@ public class FunctionDAO {
 			logger.error("Functions retrieval failed", e);
 			throw new DaoException("Functions retrieval failed", e);
 		}
+	}
+	
+	public List<Function> getFunctionsByDepartment(String departmentName) throws DaoException {
+		
+		try {
+			TypedQuery<Function> functionsFromDepartment = entityManager.createQuery(
+					"SELECT f FROM Function f JOIN f.department d WHERE d.name = :departmentName", Function.class);
+			functionsFromDepartment.setParameter("departmentName", departmentName);
+			List<Function> functions = functionsFromDepartment.getResultList();
+			return functions;
+		} catch (PersistenceException e) {
+			logger.error("Functions that have a given department selection failed.", e);
+			throw new DaoException("Functions that have a given department selection failed.");
+		}
+		
 	}
 
 }
