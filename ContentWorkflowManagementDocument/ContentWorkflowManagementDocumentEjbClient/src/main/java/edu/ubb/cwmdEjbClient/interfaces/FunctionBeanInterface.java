@@ -12,4 +12,6 @@ public interface FunctionBeanInterface {
 	FunctionDTO findById(Long functionId) throws RemoteException;
 	
 	List<FunctionDTO> getFunctions() throws RemoteException;
+	
+	List<FunctionDTO> getFunctionsByDepartment(String departmentName) throws RemoteException;
 }

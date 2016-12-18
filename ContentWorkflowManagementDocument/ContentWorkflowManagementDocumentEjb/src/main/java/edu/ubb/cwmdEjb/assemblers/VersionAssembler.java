@@ -1,6 +1,7 @@
 package edu.ubb.cwmdEjb.assemblers;
 
 import edu.ubb.cwmdEjb.model.Version;
+import edu.ubb.cwmdEjb.model.VersionStatus;
 import edu.ubb.cwmdEjbClient.dtos.VersionDTO;
 
 public class VersionAssembler {
@@ -23,6 +24,7 @@ public class VersionAssembler {
 			version.setNumber(versionDto.getNumber());
 			version.setFileName(versionDto.getFileName());
 			version.setFileContent(versionDto.getFileContent());
+			version.setStatus(VersionStatus.valueOf(versionDto.getStatus()));
 
 			return version;
 		}
@@ -43,6 +45,7 @@ public class VersionAssembler {
 			versionDto.setNumber(version.getNumber());
 			versionDto.setFileName(version.getFileName());
 			versionDto.setFileContent(version.getFileContent());
+			versionDto.setStatus(version.getStatus().toString());
 
 			return versionDto;
 		}

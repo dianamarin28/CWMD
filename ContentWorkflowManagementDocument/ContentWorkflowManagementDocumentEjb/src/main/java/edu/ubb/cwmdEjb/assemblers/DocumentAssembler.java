@@ -33,8 +33,10 @@ public class DocumentAssembler {
 
 			VersionAssembler versionAssembler = new VersionAssembler();
 			List<Version> versions = new ArrayList<>();
-			for (VersionDTO version : documentDto.getVersions()) {
-				versions.add(versionAssembler.dtoToModel(version));
+			if (documentDto.getVersions() != null) {
+				for (VersionDTO version : documentDto.getVersions()) {
+					versions.add(versionAssembler.dtoToModel(version));
+				}
 			}
 			document.setVersions(versions);
 
@@ -45,8 +47,10 @@ public class DocumentAssembler {
 
 			ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
 			List<ActiveFlow> activeFlows = new ArrayList<>();
-			for (ActiveFlowDTO activeFlow : documentDto.getActiveFlows()) {
-				activeFlows.add(activeFlowAssembler.dtoToModelSimple(activeFlow));
+			if (documentDto.getActiveFlows() != null) {
+				for (ActiveFlowDTO activeFlow : documentDto.getActiveFlows()) {
+					activeFlows.add(activeFlowAssembler.dtoToModelSimple(activeFlow));
+				}
 			}
 			document.setActiveFlows(activeFlows);
 

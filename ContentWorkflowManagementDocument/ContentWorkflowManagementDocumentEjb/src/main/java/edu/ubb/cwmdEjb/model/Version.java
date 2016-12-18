@@ -1,8 +1,9 @@
 package edu.ubb.cwmdEjb.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -27,6 +28,10 @@ public class Version extends BaseEntity {
 	@Lob
 	@Column(name = "fileContent", nullable = false)
 	private byte[] fileContent;
+
+	@Column(name = "status")
+	@Enumerated(EnumType.STRING)
+	private VersionStatus status;
 
 	public Version() {
 		super();
@@ -62,6 +67,14 @@ public class Version extends BaseEntity {
 
 	public void setDocument(Document document) {
 		this.document = document;
+	}
+
+	public VersionStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(VersionStatus status) {
+		this.status = status;
 	}
 
 }

@@ -58,5 +58,20 @@ public class FunctionBean implements Serializable,FunctionBeanInterface {
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
+	@Override
+	public List<FunctionDTO> getFunctionsByDepartment(String departmentName) throws RemoteException {
+		List<FunctionDTO> functionsDTOlist = new ArrayList<>();
+		try {
+			List<Function> list = functionDao.getFunctionsByDepartment(departmentName);
+			for (Function function : list) {
+				FunctionDTO functionDto = functionAssembler.modelToDto(function);
+				functionsDTOlist.add(functionDto);
+			}
+			return functionsDTOlist;
+		} catch (DaoException e) {
+			logger.error("Error while retrieving functions by department name " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
 
 }
