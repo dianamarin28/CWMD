@@ -1,5 +1,6 @@
 package edu.ubb.cwmdEjb.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,12 +19,12 @@ import edu.ubb.cwmdEjb.model.Function;
 
 @Stateless(name = "FunctionDAO", mappedName = "ejb/FunctionDAO")
 public class FunctionDAO {
-	
+
 	private static Logger logger = LoggerFactory.getLogger(FunctionDAO.class);
 
 	@PersistenceContext(unitName = "cwmd")
 	private EntityManager entityManager;
-	
+
 	public Function findById(Long functionId) throws DaoException {
 		try {
 			Function function = entityManager.find(Function.class, functionId);
@@ -37,7 +38,7 @@ public class FunctionDAO {
 		}
 
 	}
-	
+
 	public List<Function> getFunctions() throws DaoException {
 		try {
 			CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -52,9 +53,9 @@ public class FunctionDAO {
 			throw new DaoException("Functions retrieval failed", e);
 		}
 	}
-	
+
 	public List<Function> getFunctionsByDepartment(String departmentName) throws DaoException {
-		
+
 		try {
 			TypedQuery<Function> functionsFromDepartment = entityManager.createQuery(
 					"SELECT f FROM Function f JOIN f.department d WHERE d.name = :departmentName", Function.class);
@@ -65,7 +66,22 @@ public class FunctionDAO {
 			logger.error("Functions that have a given department selection failed.", e);
 			throw new DaoException("Functions that have a given department selection failed.");
 		}
-		
+
+	}
+
+	public List<Function> getFunctionsByFlow(Long flowId) {
+		try {
+			TypedQuery<Function> query = entityManager.createQuery(
+					"SELECT f FROM Function f INNER JOIN f.flows fl WHERE fl.id IN :flowIds", Function.class);
+			List<Long> flowIds = new ArrayList<>();
+			flowIds.add(flowId);
+			query.setParameter("flowIds", flowIds);
+			List<Function> functions = query.getResultList();
+			return functions;
+		} catch (PersistenceException e) {
+			logger.error("Functions that have a given flow selection failed.", e);
+			throw new DaoException("Functions that have a given flow selection failed.");
+		}
 	}
 
 }

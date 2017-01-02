@@ -1,6 +1,8 @@
 package edu.ubb.cwmdEjb.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -51,6 +53,72 @@ public class DocumentBean implements Serializable, DocumentBeanInterface {
 			logger.error("Get by document name and user id error " + e);
 			throw new RemoteException(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public List<DocumentDTO> getDocumentsForUserID(Long userId) throws RemoteException {
+		try {
+			List<DocumentDTO> documentDTOs = new ArrayList<>();
+			List<Document> documents = documentDAO.getByUserId(userId);
+			for (Document doc : documents) {
+				documentDTOs.add(documentAssembler.modelToDtoSimple(doc));
+			}
+			return documentDTOs;
+		} catch (DaoException e) {
+			logger.error("Get by document user id error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<DocumentDTO> getDocumentsForAdministrator(Long userId) throws RemoteException {
+		try {
+			List<DocumentDTO> documentDTOs = new ArrayList<>();
+			List<Document> documents = documentDAO.getDocumentsForAdministrator(userId);
+			for (Document doc : documents) {
+				documentDTOs.add(documentAssembler.modelToDtoSimple(doc));
+			}
+			return documentDTOs;
+		} catch (DaoException e) {
+			logger.error("Get by document user id error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public DocumentDTO findById(Long documentId) throws RemoteException {
+		DocumentDTO doc = new DocumentDTO();
+		try {
+			doc = documentAssembler.modelToDtoSimple(documentDAO.findById(documentId));
+			return doc;
+		} catch (DaoException e) {
+			logger.error("findById error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public DocumentDTO updateDocument(DocumentDTO documentDTO) throws RemoteException {
+		Document document = documentAssembler.dtoToModelSimple(documentDTO);
+		try {
+			DocumentDTO updatedDTO = documentAssembler.modelToDtoSimple(documentDAO.updateDocument(document));
+			return updatedDTO;
+		} catch (DaoException e) {
+			logger.error("Document update error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void deleteDocument(DocumentDTO documentDTO) throws RemoteException {
+		Document document = documentAssembler.dtoToModel(documentDTO);
+		try {
+			documentDAO.deleteDocument(document);
+		} catch (DaoException e) {
+			logger.error("Document deletion error: " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+
 	}
 
 }

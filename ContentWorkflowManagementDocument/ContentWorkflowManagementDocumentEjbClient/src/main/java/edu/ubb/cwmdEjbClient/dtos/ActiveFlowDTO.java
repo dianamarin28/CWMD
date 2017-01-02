@@ -8,11 +8,40 @@ public class ActiveFlowDTO {
 
 	private String uuid;
 
+	private String name;
+
 	private FlowDTO flow;
 
 	private UserDTO user;
 
-	private List<DocumentDTO> documents;
+	private List<VersionDTO> versions;
+
+	private String status;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((activeFlowId == null) ? 0 : activeFlowId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ActiveFlowDTO other = (ActiveFlowDTO) obj;
+		if (activeFlowId == null) {
+			if (other.activeFlowId != null)
+				return false;
+		} else if (!activeFlowId.equals(other.activeFlowId))
+			return false;
+		return true;
+	}
 
 	public Long getActiveFlowId() {
 		return activeFlowId;
@@ -46,12 +75,28 @@ public class ActiveFlowDTO {
 		this.user = user;
 	}
 
-	public List<DocumentDTO> getDocuments() {
-		return documents;
+	public List<VersionDTO> getVersions() {
+		return versions;
 	}
 
-	public void setDocuments(List<DocumentDTO> documents) {
-		this.documents = documents;
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setVersions(List<VersionDTO> versions) {
+		this.versions = versions;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

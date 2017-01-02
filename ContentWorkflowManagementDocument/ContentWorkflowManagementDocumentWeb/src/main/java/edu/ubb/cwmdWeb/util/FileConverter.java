@@ -1,5 +1,6 @@
 package edu.ubb.cwmdWeb.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,12 @@ public class FileConverter {
 			inputStream.close();
 			buffer.close();
 		}
+	}
+
+	// http://stackoverflow.com/questions/1802123/can-we-convert-a-byte-array-into-an-inputstream-in-java
+	public static InputStream convertByteArrayToInputStream(byte[] content) {
+		InputStream is = new ByteArrayInputStream(content);
+		return is;
 	}
 
 }

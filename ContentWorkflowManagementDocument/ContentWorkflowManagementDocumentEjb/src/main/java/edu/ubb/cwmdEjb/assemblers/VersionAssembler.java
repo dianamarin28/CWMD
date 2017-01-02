@@ -26,6 +26,12 @@ public class VersionAssembler {
 			version.setFileContent(versionDto.getFileContent());
 			version.setStatus(VersionStatus.valueOf(versionDto.getStatus()));
 
+			if (versionDto.getActiveFlow() != null) {
+				ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
+				version.setActiveFlow(activeFlowAssembler.dtoToModelSimple(versionDto.getActiveFlow()));
+			} else {
+				version.setActiveFlow(null);
+			}
 			return version;
 		}
 	}
@@ -47,6 +53,12 @@ public class VersionAssembler {
 			versionDto.setFileContent(version.getFileContent());
 			versionDto.setStatus(version.getStatus().toString());
 
+			if (version.getActiveFlow() != null) {
+				ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
+				versionDto.setActiveFlow(activeFlowAssembler.modelToDtoSimple(version.getActiveFlow()));
+			} else {
+				versionDto.setActiveFlow(null);
+			}
 			return versionDto;
 		}
 	}
