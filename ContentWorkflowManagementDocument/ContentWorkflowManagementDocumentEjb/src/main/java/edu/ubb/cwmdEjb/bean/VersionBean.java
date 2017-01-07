@@ -1,6 +1,8 @@
 package edu.ubb.cwmdEjb.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -37,6 +39,79 @@ public class VersionBean implements Serializable, VersionBeanInterface {
 			versionDAO.insertVersion(version);
 		} catch (DaoException e) {
 			logger.error("Version insertion error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Double getLatestVersionNumberForDraft(Long documentId) throws RemoteException {
+		try {
+			return versionDAO.getLatestVersionNumberDraft(documentId);
+		} catch (DaoException e) {
+			logger.error("Version number retrieval failed " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<VersionDTO> getAllVersionsOfDocument(Long documentId) throws RemoteException {
+		List<VersionDTO> versionDTOs = new ArrayList<>();
+		try {
+			List<Version> versions = versionDAO.getAllVersionsOfDocument(documentId);
+			for (Version version : versions) {
+				versionDTOs.add(versionAssembler.modelToDto(version));
+			}
+			return versionDTOs;
+		} catch (DaoException e) {
+			logger.error("Version retrieval failed " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void deleteVersion(VersionDTO versionDTO) throws RemoteException {
+		Version version = versionAssembler.dtoToModel(versionDTO);
+		try {
+			versionDAO.deleteVersion(version);
+		} catch (DaoException e) {
+			logger.error("Version deletion error: " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public VersionDTO findById(Long versionId) throws RemoteException {
+		VersionDTO versionDTO = new VersionDTO();
+		try {
+			versionDTO = versionAssembler.modelToDto(versionDAO.findById(versionId));
+			return versionDTO;
+		} catch (DaoException e) {
+			logger.error("Find version by id error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Double getLatestVersionNumberForFinal(Long documentId) throws RemoteException {
+		try {
+			return versionDAO.getLatestVersionNumberFinal(documentId);
+		} catch (DaoException e) {
+			logger.error("Version number retrieval failed " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<VersionDTO> getAllVersionsFromActiveFlow(Long activeFlowId) throws RemoteException {
+		List<VersionDTO> versionDTOs = new ArrayList<>();
+		try {
+			List<Version> versions = versionDAO.getAllVersionsFromActiveFlow(activeFlowId);
+			for (Version version : versions) {
+				versionDTOs.add(versionAssembler.modelToDto(version));
+			}
+			return versionDTOs;
+		} catch (DaoException e) {
+			logger.error("Version retrieval failed " + e);
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}

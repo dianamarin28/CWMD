@@ -3,10 +3,8 @@ package edu.ubb.cwmdEjb.assemblers;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.ubb.cwmdEjb.model.ActiveFlow;
 import edu.ubb.cwmdEjb.model.Document;
 import edu.ubb.cwmdEjb.model.Version;
-import edu.ubb.cwmdEjbClient.dtos.ActiveFlowDTO;
 import edu.ubb.cwmdEjbClient.dtos.DocumentDTO;
 import edu.ubb.cwmdEjbClient.dtos.VersionDTO;
 
@@ -22,7 +20,7 @@ public class DocumentAssembler {
 			Document document = new Document();
 
 			document.setUuid(documentDto.getUuid());
-			document.setId(documentDto.getDocumentFlowId());
+			document.setId(documentDto.getDocumentId());
 			document.setName(documentDto.getName());
 
 			UserAssembler userAssembler = new UserAssembler();
@@ -45,15 +43,6 @@ public class DocumentAssembler {
 			document.setDocAbstract(documentDto.getDocAbstract());
 			document.setKeywords(documentDto.getKeywords());
 
-			ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
-			List<ActiveFlow> activeFlows = new ArrayList<>();
-			if (documentDto.getActiveFlows() != null) {
-				for (ActiveFlowDTO activeFlow : documentDto.getActiveFlows()) {
-					activeFlows.add(activeFlowAssembler.dtoToModelSimple(activeFlow));
-				}
-			}
-			document.setActiveFlows(activeFlows);
-
 			return document;
 		}
 	}
@@ -65,7 +54,7 @@ public class DocumentAssembler {
 			Document document = new Document();
 
 			document.setUuid(documentDto.getUuid());
-			document.setId(documentDto.getDocumentFlowId());
+			document.setId(documentDto.getDocumentId());
 			document.setName(documentDto.getName());
 
 			UserAssembler userAssembler = new UserAssembler();
@@ -94,7 +83,7 @@ public class DocumentAssembler {
 			DocumentDTO documentDto = new DocumentDTO();
 
 			documentDto.setUuid(document.getUuid());
-			documentDto.setDocumentFlowId(document.getId());
+			documentDto.setDocumentId(document.getId());
 			documentDto.setName(document.getName());
 
 			UserAssembler userAssembler = new UserAssembler();
@@ -115,13 +104,6 @@ public class DocumentAssembler {
 			documentDto.setDocAbstract(document.getDocAbstract());
 			documentDto.setKeywords(document.getKeywords());
 
-			ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
-			List<ActiveFlowDTO> activeFlows = new ArrayList<>();
-			for (ActiveFlow activeFlow : document.getActiveFlows()) {
-				activeFlows.add(activeFlowAssembler.modelToDtoSimple(activeFlow));
-			}
-			documentDto.setActiveFlows(activeFlows);
-
 			return documentDto;
 		}
 	}
@@ -133,7 +115,7 @@ public class DocumentAssembler {
 			DocumentDTO documentDto = new DocumentDTO();
 
 			documentDto.setUuid(document.getUuid());
-			documentDto.setDocumentFlowId(document.getId());
+			documentDto.setDocumentId(document.getId());
 			documentDto.setName(document.getName());
 
 			UserAssembler userAssembler = new UserAssembler();
