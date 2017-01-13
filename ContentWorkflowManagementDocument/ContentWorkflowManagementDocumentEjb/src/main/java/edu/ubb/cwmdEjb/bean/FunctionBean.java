@@ -21,17 +21,17 @@ import edu.ubb.cwmdEjbClient.interfaces.RemoteException;
 
 @Stateless
 @LocalBean
-public class FunctionBean implements Serializable,FunctionBeanInterface {
-	
+public class FunctionBean implements Serializable, FunctionBeanInterface {
+
 	private static final long serialVersionUID = -5911147179236801226L;
 
 	private static Logger logger = LoggerFactory.getLogger(FunctionBean.class);
-	
-	
+
 	@EJB
 	private FunctionDAO functionDao;
-	
+
 	private FunctionAssembler functionAssembler = new FunctionAssembler();
+
 	@Override
 	public FunctionDTO findById(Long functionId) throws RemoteException {
 		FunctionDTO function = new FunctionDTO();
@@ -43,6 +43,7 @@ public class FunctionBean implements Serializable,FunctionBeanInterface {
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
+
 	@Override
 	public List<FunctionDTO> getFunctions() throws RemoteException {
 		List<FunctionDTO> functionsDTOlist = new ArrayList<>();
@@ -58,11 +59,28 @@ public class FunctionBean implements Serializable,FunctionBeanInterface {
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
+
 	@Override
 	public List<FunctionDTO> getFunctionsByDepartment(String departmentName) throws RemoteException {
 		List<FunctionDTO> functionsDTOlist = new ArrayList<>();
 		try {
 			List<Function> list = functionDao.getFunctionsByDepartment(departmentName);
+			for (Function function : list) {
+				FunctionDTO functionDto = functionAssembler.modelToDto(function);
+				functionsDTOlist.add(functionDto);
+			}
+			return functionsDTOlist;
+		} catch (DaoException e) {
+			logger.error("Error while retrieving functions by department name " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<FunctionDTO> getFunctionsByFlow(Long flowId) throws RemoteException {
+		List<FunctionDTO> functionsDTOlist = new ArrayList<>();
+		try {
+			List<Function> list = functionDao.getFunctionsByFlow(flowId);
 			for (Function function : list) {
 				FunctionDTO functionDto = functionAssembler.modelToDto(function);
 				functionsDTOlist.add(functionDto);

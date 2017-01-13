@@ -33,6 +33,10 @@ public class Version extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private VersionStatus status;
 
+	@JoinColumn(name = "activeFlowId")
+	@ManyToOne()
+	private ActiveFlow activeFlow;
+
 	public Version() {
 		super();
 	}
@@ -75,6 +79,14 @@ public class Version extends BaseEntity {
 
 	public void setStatus(VersionStatus status) {
 		this.status = status;
+	}
+
+	public ActiveFlow getActiveFlow() {
+		return activeFlow;
+	}
+
+	public void setActiveFlow(ActiveFlow activeFlow) {
+		this.activeFlow = activeFlow;
 	}
 
 }

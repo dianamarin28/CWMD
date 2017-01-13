@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DocumentDTO {
 
-	private Long documentFlowId;
+	private Long documentId;
 
 	private String uuid;
 
@@ -25,14 +25,37 @@ public class DocumentDTO {
 
 	private String keywords;
 
-	private List<ActiveFlowDTO> activeFlows;
-
-	public Long getDocumentFlowId() {
-		return documentFlowId;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((documentId == null) ? 0 : documentId.hashCode());
+		return result;
 	}
 
-	public void setDocumentFlowId(Long documentFlowId) {
-		this.documentFlowId = documentFlowId;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DocumentDTO other = (DocumentDTO) obj;
+		if (documentId == null) {
+			if (other.documentId != null)
+				return false;
+		} else if (!documentId.equals(other.documentId))
+			return false;
+		return true;
+	}
+
+	public Long getDocumentId() {
+		return documentId;
+	}
+
+	public void setDocumentId(Long documentId) {
+		this.documentId = documentId;
 	}
 
 	public String getUuid() {
@@ -105,14 +128,6 @@ public class DocumentDTO {
 
 	public void setKeywords(String keywords) {
 		this.keywords = keywords;
-	}
-
-	public List<ActiveFlowDTO> getActiveFlows() {
-		return activeFlows;
-	}
-
-	public void setActiveFlows(List<ActiveFlowDTO> activeFlows) {
-		this.activeFlows = activeFlows;
 	}
 
 }

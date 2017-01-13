@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.ubb.cwmdEjb.model.ActiveFlow;
-import edu.ubb.cwmdEjb.model.Document;
+import edu.ubb.cwmdEjb.model.ActiveFlowStatus;
+import edu.ubb.cwmdEjb.model.Version;
 import edu.ubb.cwmdEjbClient.dtos.ActiveFlowDTO;
-import edu.ubb.cwmdEjbClient.dtos.DocumentDTO;
+import edu.ubb.cwmdEjbClient.dtos.VersionDTO;
 
 public class ActiveFlowAssembler {
 
@@ -21,6 +22,8 @@ public class ActiveFlowAssembler {
 
 			activeFlow.setUuid(activeFlowDto.getUuid());
 			activeFlow.setId(activeFlowDto.getActiveFlowId());
+			activeFlow.setName(activeFlowDto.getName());
+			activeFlow.setStatus(ActiveFlowStatus.valueOf(activeFlowDto.getStatus()));
 
 			FlowAssembler flowAssembler = new FlowAssembler();
 			activeFlow.setFlow(flowAssembler.dtoToModelSimple(activeFlowDto.getFlow()));
@@ -28,12 +31,12 @@ public class ActiveFlowAssembler {
 			UserAssembler userAssembler = new UserAssembler();
 			activeFlow.setUser(userAssembler.dtoToModelSimple(activeFlowDto.getUser()));
 
-			DocumentAssembler documentAssembler = new DocumentAssembler();
-			List<Document> documents = new ArrayList<>();
-			for (DocumentDTO documentDto : activeFlowDto.getDocuments()) {
-				documents.add(documentAssembler.dtoToModelSimple(documentDto));
+			VersionAssembler versionAssembler = new VersionAssembler();
+			List<Version> versions = new ArrayList<>();
+			for (VersionDTO versionDto : activeFlowDto.getVersions()) {
+				versions.add(versionAssembler.dtoToModel(versionDto));
 			}
-			activeFlow.setDocuments(documents);
+			activeFlow.setVersions(versions);
 
 			return activeFlow;
 		}
@@ -47,6 +50,8 @@ public class ActiveFlowAssembler {
 
 			activeFlow.setUuid(activeFlowDto.getUuid());
 			activeFlow.setId(activeFlowDto.getActiveFlowId());
+			activeFlow.setName(activeFlowDto.getName());
+			activeFlow.setStatus(ActiveFlowStatus.valueOf(activeFlowDto.getStatus()));
 
 			FlowAssembler flowAssembler = new FlowAssembler();
 			activeFlow.setFlow(flowAssembler.dtoToModelSimple(activeFlowDto.getFlow()));
@@ -68,6 +73,8 @@ public class ActiveFlowAssembler {
 
 			activeFlowDto.setUuid(activeFlow.getUuid());
 			activeFlowDto.setActiveFlowId(activeFlow.getId());
+			activeFlowDto.setName(activeFlow.getName());
+			activeFlowDto.setStatus(activeFlow.getStatus().toString());
 
 			FlowAssembler flowAssembler = new FlowAssembler();
 			activeFlowDto.setFlow(flowAssembler.modelToDtoSimple(activeFlow.getFlow()));
@@ -75,12 +82,12 @@ public class ActiveFlowAssembler {
 			UserAssembler userAssembler = new UserAssembler();
 			activeFlowDto.setUser(userAssembler.modelToDtoSimple(activeFlow.getUser()));
 
-			DocumentAssembler documentAssembler = new DocumentAssembler();
-			List<DocumentDTO> documentDtos = new ArrayList<>();
-			for (Document document : activeFlow.getDocuments()) {
-				documentDtos.add(documentAssembler.modelToDtoSimple(document));
+			VersionAssembler versionAssembler = new VersionAssembler();
+			List<VersionDTO> versionDtos = new ArrayList<>();
+			for (Version version : activeFlow.getVersions()) {
+				versionDtos.add(versionAssembler.modelToDto(version));
 			}
-			activeFlowDto.setDocuments(documentDtos);
+			activeFlowDto.setVersions(versionDtos);
 
 			return activeFlowDto;
 		}
@@ -94,6 +101,8 @@ public class ActiveFlowAssembler {
 
 			activeFlowDto.setUuid(activeFlow.getUuid());
 			activeFlowDto.setActiveFlowId(activeFlow.getId());
+			activeFlowDto.setName(activeFlow.getName());
+			activeFlowDto.setStatus(activeFlow.getStatus().toString());
 
 			FlowAssembler flowAssembler = new FlowAssembler();
 			activeFlowDto.setFlow(flowAssembler.modelToDtoSimple(activeFlow.getFlow()));

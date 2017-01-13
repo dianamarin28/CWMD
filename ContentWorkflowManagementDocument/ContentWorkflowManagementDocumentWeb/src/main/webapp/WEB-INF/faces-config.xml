@@ -35,11 +35,20 @@
 			<to-view-id>/manageUsers.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<navigation-rule>
 		<from-view-id>/manageDocuments.xhtml</from-view-id>
 		<navigation-case>
 			<from-action>#{manageDocumentsBean.insertDocument}</from-action>
+			<from-outcome>ok</from-outcome>
+			<to-view-id>/manageDocuments.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/manageDocuments.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{manageDocumentsBean.updateDocumentMethod}</from-action>
 			<from-outcome>ok</from-outcome>
 			<to-view-id>/manageDocuments.xhtml</to-view-id>
 		</navigation-case>

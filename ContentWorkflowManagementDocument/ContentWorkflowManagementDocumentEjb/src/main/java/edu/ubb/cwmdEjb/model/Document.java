@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,7 +28,7 @@ public class Document extends BaseEntity {
 	@ManyToOne
 	private Template template;
 
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "document")
+	@OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Version> version;
 
 	@Column(name = "creationDate", nullable = false)
@@ -44,8 +43,8 @@ public class Document extends BaseEntity {
 	@Column(name = "keywords", nullable = false)
 	private String keywords;
 
-	@ManyToMany(mappedBy = "documents")
-	private List<ActiveFlow> activeFlows;
+	@Column(name = "deletionDate")
+	private LocalDate deletionDate;
 
 	public Document() {
 		super();
@@ -115,11 +114,12 @@ public class Document extends BaseEntity {
 		this.version = version;
 	}
 
-	public List<ActiveFlow> getActiveFlows() {
-		return activeFlows;
+	public LocalDate getDeletionDate() {
+		return deletionDate;
 	}
 
-	public void setActiveFlows(List<ActiveFlow> activeFlows) {
-		this.activeFlows = activeFlows;
+	public void setDeletionDate(LocalDate deletionDate) {
+		this.deletionDate = deletionDate;
 	}
+
 }

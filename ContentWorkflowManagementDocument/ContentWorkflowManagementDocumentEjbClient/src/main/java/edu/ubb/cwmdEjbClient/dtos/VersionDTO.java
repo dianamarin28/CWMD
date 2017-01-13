@@ -16,6 +16,41 @@ public class VersionDTO {
 
 	private String status;
 
+	private ActiveFlowDTO activeFlow;
+
+	public ActiveFlowDTO getActiveFlow() {
+		return activeFlow;
+	}
+
+	public void setActiveFlow(ActiveFlowDTO activeFlow) {
+		this.activeFlow = activeFlow;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((versionId == null) ? 0 : versionId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		VersionDTO other = (VersionDTO) obj;
+		if (versionId == null) {
+			if (other.versionId != null)
+				return false;
+		} else if (!versionId.equals(other.versionId))
+			return false;
+		return true;
+	}
+
 	public Long getVersionId() {
 		return versionId;
 	}

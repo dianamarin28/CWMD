@@ -13,8 +13,8 @@
 		<h:form id="manageDataForm">
 			<p:growl id="msgs" showDetail="true" />
 
-			<p:tabView>
-				<p:tab title="Add document">
+			<p:tabView id="manageTabs">
+				<p:tab title="Add document" id="insertTab">
 					<p:fileUpload
 						fileUploadListener="#{manageDocumentsBean.handleFileUpload}"
 						mode="advanced" dragDropSupport="false"
@@ -43,15 +43,100 @@
 							value="#{manageDocumentsBean.keyWords}" rows="5" cols="30" />
 					</h:panelGrid>
 
-					<h:commandButton value="Insert"
-						action="#{manageDocumentsBean.insertDocument}"></h:commandButton>
+					<p:commandButton value="Insert"
+						actionListener="#{manageDocumentsBean.insertDocument}"
+						action="manageDocuments.xhtml?faces-redirect=true"
+						update="#{p:component('msgs')}" process="@this,insertTab"></p:commandButton>
 
 				</p:tab>
-				<p:tab title="Update document">
+				<p:tab title="Update document" id="updateTab">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="selectDocument" value="Select document" />
+						<p:selectOneMenu id="selectDocument"
+							value="#{manageDocumentsBean.updateDocument}"
+							converter="documentConverter">
+							<p:ajax listener="#{manageDocumentsBean.setUpdateValues}"
+								update="updateDoc" />
+							<f:selectItem itemLabel="Select a document" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{manageDocumentsBean.documents}"
+								var="document" itemLabel="#{document.name}"
+								itemValue="#{document}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+					<p:fileUpload
+						fileUploadListener="#{manageDocumentsBean.handleFileUpdate}"
+						mode="advanced" dragDropSupport="false"
+						update="#{p:component('msgs')}" auto="true" fileLimit="1"
+						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
+
+					<h:panelGrid columns="2" id="updateDoc">
+						<p:outputLabel for="updateStatus" value="Select status" />
+						<p:selectOneMenu id="updateStatus" value="#{manageDocumentsBean.status}">
+							<f:selectItem itemLabel="Select a status" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{manageDocumentsBean.statuses}" />
+						</p:selectOneMenu>
 					
+					
+						<p:outputLabel for="docAbstractUpdate" value="Abstract" />
+						<p:inputTextarea id="docAbstractUpdate"
+							value="#{manageDocumentsBean.updateDocAbstract}" rows="5"
+							cols="30" />
+
+						<p:outputLabel for="keyWordsUpdate" value="Key Words" />
+						<p:inputTextarea id="keyWordsUpdate"
+							value="#{manageDocumentsBean.updateKeyWords}" rows="5" cols="30" />
+					</h:panelGrid>
+
+					<p:commandButton value="Update" process="@this,updateTab"
+						actionListener="#{manageDocumentsBean.updateDocumentMethod}"
+						update="#{p:component('msgs')} #{p:component('manageTabs')}"></p:commandButton>
+
 				</p:tab>
-				<p:tab title="Delete document">
-					
+				<p:tab title="Delete document" id="deleteTab">
+					<p:dataTable id="documentsTable"
+						value="#{manageDocumentsBean.documents}" var="document"
+						editable="true">
+
+						<f:facet name="header">
+							<h:outputText value="Documents Table"></h:outputText>
+						</f:facet>
+
+						<p:column headerText="Name">
+							<p:outputLabel value="#{document.name}" />
+						</p:column>
+
+						<p:column headerText="Abstract">
+							<p:outputLabel value="#{document.docAbstract}" />
+						</p:column>
+
+						<p:column headerText="Key Words">
+							<p:outputLabel value="#{document.keywords}" />
+						</p:column>
+
+						<p:column style="width:40px">
+							<p:column>
+								<p:commandButton icon="ui-icon-trash"
+									process="@this,documentsTable"
+									actionListener="#{manageDocumentsBean.delete(document)}"
+									update="#{p:component('msgs')}  #{p:component('manageTabs')}">
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</p:column>
+						</p:column>
+
+					</p:dataTable>
 				</p:tab>
 			</p:tabView>
 

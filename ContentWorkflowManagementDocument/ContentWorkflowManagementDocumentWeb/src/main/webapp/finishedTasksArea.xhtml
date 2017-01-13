@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="finishedTasksAreaForm">
+			<p:growl id="msgs" showDetail="true" />
+
+			<h:panelGrid columns="2">
+				<p:outputLabel for="selectActiveFlow" value="Select active flow" />
+				<p:selectOneMenu id="selectActiveFlow"
+					value="#{finishedTasksAreaBean.selectedActiveFlow}"
+					converter="activeFlowConverter">
+					<p:ajax listener="#{finishedTasksAreaBean.setValues}"
+						update="viewVersions viewUsers" />
+					<f:selectItem itemLabel="Select an active flow" itemValue="#{null}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{finishedTasksAreaBean.activeFlowDTOs}"
+						var="activeFlow" itemLabel="#{activeFlow.activeFlowId}"
+						itemValue="#{activeFlow}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<p:dataList id="viewUsers"
+				value="#{finishedTasksAreaBean.functionsDTOs}" var="function"
+				type="unordered" itemType="none" paginator="true" rows="10"
+				styleClass="paginated">
+				<f:facet name="header">Functions in active flow</f:facet>
+				<h:outputText value="#{function.type}" style="display:inline-block" />
+			</p:dataList>
+
+			<p:dataList id="viewVersions"
+				value="#{finishedTasksAreaBean.versionDTOs}" var="version"
+				type="unordered" itemType="none" paginator="true" rows="10"
+				styleClass="paginated">
+				<f:facet name="header">Documents in active flow</f:facet>
+				<p:commandLink update="mainForm:finishedTasksAreaForm:versionDetail"
+					oncomplete="PF('versionDialog').show()" title="Version Detail"
+					styleClass="ui-icon ui-icon-search"
+					style="float:left;margin-right:10px">
+					<f:setPropertyActionListener value="#{version}"
+						target="#{finishedTasksAreaBean.versionDTO}" />
+					<h:outputText value="#{version.fileName}, #{version.document.name}" />
+				</p:commandLink>
+				<h:outputText value="#{version.fileName}, #{version.document.name}"
+					style="display:inline-block" />
+			</p:dataList>
+
+			<p:dialog header="Version Info" widgetVar="versionDialog"
+				showEffect="blind" hideEffect="explode" resizable="false">
+				<p:outputPanel id="versionDetail" style="text-align:center;">
+					<p:panelGrid columns="2" columnClasses="label,value">
+						<h:outputText for="docName" value="Document name" />
+						<h:outputText id="docName"
+							value="#{finishedTasksAreaBean.versionDTO.document.name}" />
+
+						<h:outputText for="fileName" value="File name" />
+						<h:outputText id="fileName"
+							value="#{finishedTasksAreaBean.versionDTO.fileName}" />
+
+						<h:outputText for="status" value="Status" />
+						<h:outputText id="status"
+							value="#{finishedTasksAreaBean.versionDTO.status}" />
+
+						<h:outputText for="number" value="Version" />
+						<h:outputText id="number"
+							value="#{finishedTasksAreaBean.versionDTO.number}" />
+
+						<h:outputText for="lastModDate" value="Last modification date" />
+						<h:outputText id="lastModDate"
+							value="#{finishedTasksAreaBean.versionDTO.document.lastModficationDate}" />
+
+						<h:outputText for="author" value="Author's user name" />
+						<h:outputText id="author"
+							value="#{finishedTasksAreaBean.versionDTO.document.author.userName}" />
+
+					</p:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

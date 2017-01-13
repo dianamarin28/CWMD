@@ -2,11 +2,14 @@ package edu.ubb.cwmdEjb.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,6 +17,9 @@ import javax.persistence.Table;
 public class ActiveFlow extends BaseEntity {
 
 	private static final long serialVersionUID = 5167730237414597243L;
+
+	@Column(name = "name")
+	private String name;
 
 	@JoinColumn(name = "flowId")
 	@ManyToOne
@@ -23,11 +29,12 @@ public class ActiveFlow extends BaseEntity {
 	@ManyToOne
 	private User user;
 
-	@ManyToMany()
-	@JoinTable(name = "activeFlow_document", joinColumns = {
-			@JoinColumn(name = "activeFlowId", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "documentId", nullable = false, updatable = false) })
-	private List<Document> documents;
+	@OneToMany(mappedBy = "activeFlow", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Version> versions;
+
+	@Column(name = "status")
+	@Enumerated(EnumType.STRING)
+	private ActiveFlowStatus status;
 
 	public ActiveFlow() {
 		super();
@@ -49,11 +56,28 @@ public class ActiveFlow extends BaseEntity {
 		this.user = user;
 	}
 
-	public List<Document> getDocuments() {
-		return documents;
+	public List<Version> getVersions() {
+		return versions;
 	}
 
-	public void setDocuments(List<Document> documents) {
-		this.documents = documents;
+	public void setVersions(List<Version> versions) {
+		this.versions = versions;
 	}
+
+	public ActiveFlowStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ActiveFlowStatus status) {
+		this.status = status;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 }
