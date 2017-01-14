@@ -18,8 +18,8 @@ public class ActiveFlow extends BaseEntity {
 
 	private static final long serialVersionUID = 5167730237414597243L;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "step")
+	private String step;
 
 	@JoinColumn(name = "flowId")
 	@ManyToOne
@@ -72,12 +72,12 @@ public class ActiveFlow extends BaseEntity {
 		this.status = status;
 	}
 
-	public String getName() {
-		return name;
+	public String getStep() {
+		return step;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStep(String step) {
+		this.step = step;
 	}
 
 }

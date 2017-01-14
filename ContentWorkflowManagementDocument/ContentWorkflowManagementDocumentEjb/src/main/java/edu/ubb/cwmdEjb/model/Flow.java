@@ -17,6 +17,9 @@ public class Flow extends BaseEntity {
 	@Column(name = "name", nullable = false)
 	private String name;
 
+	@Column(name = "noOfParticipants", nullable = false)
+	private int noOfParticipants;
+	
 	@ManyToMany(mappedBy = "flows")
 	private List<Function> functions;
 
@@ -49,6 +52,14 @@ public class Flow extends BaseEntity {
 
 	public void setActiveFlows(List<ActiveFlow> activeFlows) {
 		this.activeFlows = activeFlows;
+	}
+
+	public int getNoOfParticipants() {
+		return noOfParticipants;
+	}
+
+	public void setNoOfParticipants(int noOfParticipants) {
+		this.noOfParticipants = noOfParticipants;
 	}
 
 }
