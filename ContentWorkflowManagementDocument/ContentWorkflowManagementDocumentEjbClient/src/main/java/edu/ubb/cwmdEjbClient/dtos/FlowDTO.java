@@ -16,6 +16,7 @@ public class FlowDTO implements Serializable {
 	
 	private int noOfParticipants;
 
+	private ConfiguredFlowDTO configuredFlow;
 	// private List<FunctionDTO> functions;
 
 	Map<String, Long> participants;
@@ -28,6 +29,14 @@ public class FlowDTO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public ConfiguredFlowDTO getConfiguredFlow() {
+		return configuredFlow;
+	}
+
+	public void setConfiguredFlow(ConfiguredFlowDTO configuredFlow) {
+		this.configuredFlow = configuredFlow;
 	}
 
 	public List<ActiveFlowDTO> getActiveFlows() {

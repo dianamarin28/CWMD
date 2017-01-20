@@ -9,8 +9,10 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +27,10 @@ public class Flow extends BaseEntity {
 	@Column(name = "noOfParticipants", nullable = false)
 	private int noOfParticipants;
 
+	@JoinColumn(name = "configuredFlowId")
+	@OneToOne
+	private ConfiguredFlow configuredFlow;
+	
 	// @ManyToMany(mappedBy = "flows")
 	// private List<Function> functions;
 
@@ -49,6 +55,14 @@ public class Flow extends BaseEntity {
 		this.name = name;
 	}
 
+	public ConfiguredFlow getConfiguredFlow() {
+		return configuredFlow;
+	}
+
+	public void setConfiguredFlow(ConfiguredFlow configuredFlow) {
+		this.configuredFlow = configuredFlow;
+	}
+	
 	public List<ActiveFlow> getActiveFlows() {
 		return activeFlows;
 	}

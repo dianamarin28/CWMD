@@ -9,16 +9,17 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "configuredFlow")
-public class ConfiguredFlows extends BaseEntity{
+public class ConfiguredFlow extends BaseEntity{
 	
 	private static final long serialVersionUID = -2502548668979454934L;
 
-	@JoinColumn(name = "flowId")
-	@ManyToOne()
+	@Column(name = "flowId", nullable = false)
+	@OneToOne()
 	private Flow flow;
 	
 	@Column(name = "P1", nullable = false)
