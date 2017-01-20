@@ -19,4 +19,6 @@ public interface ActiveFlowBeanInterface {
 
 	List<ActiveFlowDTO> getFinishedForAdministrator(Long userId) throws RemoteException;
 
+	ActiveFlowDTO updateActiveFlow(ActiveFlowDTO activeFlowDTO) throws RemoteException;
+
 }

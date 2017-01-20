@@ -18,6 +18,8 @@ public class ActiveFlowDTO {
 
 	private String status;
 
+	private String step;
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -97,6 +99,14 @@ public class ActiveFlowDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStep() {
+		return step;
+	}
+
+	public void setStep(String step) {
+		this.step = step;
 	}
 
 }

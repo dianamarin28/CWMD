@@ -42,6 +42,17 @@ public class ActiveFlowDAO {
 		}
 	}
 
+	public ActiveFlow updateActiveFlow(ActiveFlow activeFlow) throws DaoException {
+		try {
+			activeFlow = entityManager.merge(activeFlow);
+			entityManager.flush();
+			return activeFlow;
+		} catch (PersistenceException e) {
+			logger.error("Active flow update failed ", e);
+			throw new DaoException("Active flow update failed", e);
+		}
+	}
+
 	public List<ActiveFlow> getActiveByUserId(Long userId) throws DaoException {
 		try {
 			TypedQuery<ActiveFlow> query = entityManager.createQuery(

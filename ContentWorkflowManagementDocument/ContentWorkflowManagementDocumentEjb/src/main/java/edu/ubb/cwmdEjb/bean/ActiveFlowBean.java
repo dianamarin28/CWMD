@@ -104,4 +104,16 @@ public class ActiveFlowBean implements Serializable, ActiveFlowBeanInterface {
 		}
 	}
 
+	@Override
+	public ActiveFlowDTO updateActiveFlow(ActiveFlowDTO activeFlowDTO) throws RemoteException {
+		ActiveFlow activeFlow = activeFlowAssembler.dtoToModel(activeFlowDTO);
+		try {
+			ActiveFlowDTO updatedDTO = activeFlowAssembler.modelToDto(activeFlowDAO.updateActiveFlow(activeFlow));
+			return updatedDTO;
+		} catch (DaoException e) {
+			logger.error("Update active flow error: " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
 }
