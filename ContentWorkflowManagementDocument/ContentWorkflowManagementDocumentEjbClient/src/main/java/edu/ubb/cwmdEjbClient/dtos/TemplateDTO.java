@@ -12,6 +12,8 @@ public class TemplateDTO {
 
 	private byte[] content;
 
+	private String fileName;
+
 	private List<DocumentDTO> documents;
 
 	@Override
@@ -69,6 +71,14 @@ public class TemplateDTO {
 
 	public void setContent(byte[] content) {
 		this.content = content;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public List<DocumentDTO> getDocuments() {

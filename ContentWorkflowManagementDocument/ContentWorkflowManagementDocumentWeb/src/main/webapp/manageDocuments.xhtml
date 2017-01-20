@@ -73,13 +73,14 @@
 
 					<h:panelGrid columns="2" id="updateDoc">
 						<p:outputLabel for="updateStatus" value="Select status" />
-						<p:selectOneMenu id="updateStatus" value="#{manageDocumentsBean.status}">
+						<p:selectOneMenu id="updateStatus"
+							value="#{manageDocumentsBean.status}">
 							<f:selectItem itemLabel="Select a status" itemValue=""
 								noSelectionOption="true" />
 							<f:selectItems value="#{manageDocumentsBean.statuses}" />
 						</p:selectOneMenu>
-					
-					
+
+
 						<p:outputLabel for="docAbstractUpdate" value="Abstract" />
 						<p:inputTextarea id="docAbstractUpdate"
 							value="#{manageDocumentsBean.updateDocAbstract}" rows="5"
@@ -137,6 +138,88 @@
 						</p:column>
 
 					</p:dataTable>
+				</p:tab>
+
+
+				<p:tab title="Modify versions of document" id="versions">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="selectDocumentForVersion"
+							value="Select document" />
+						<p:selectOneMenu id="selectDocumentForVersion"
+							value="#{manageDocumentsBean.documentForVersion}"
+							converter="documentConverter">
+							<p:ajax listener="#{manageDocumentsBean.setVersionsTableValues}"
+								update="versionsTable" />
+							<f:selectItem itemLabel="Select a document" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{manageDocumentsBean.documents}"
+								var="document" itemLabel="#{document.name}"
+								itemValue="#{document}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+
+					<p:dataTable id="versionsTable"
+						value="#{manageDocumentsBean.versionsForUpdate}" var="version"
+						editable="true">
+
+						<f:facet name="header">
+							<h:outputText value="Versions Table"></h:outputText>
+						</f:facet>
+
+						<p:ajax event="rowEdit"
+							listener="#{manageDocumentsBean.onRowEdit}"
+							update="#{p:component('msgs')}" />
+						<p:ajax event="rowEditCancel"
+							listener="#{manageDocumentsBean.onRowCancel}"
+							update="#{p:component('msgs')}" />
+
+						<p:column headerText="File name">
+							<p:outputLabel value="#{version.fileName}" />
+						</p:column>
+
+						<p:column headerText="Status">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:outputLabel value="#{version.status}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:selectOneMenu id="status" value="#{version.status}">
+										<f:selectItems value="#{manageDocumentsBean.versionStatuses}" />
+									</p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Number">
+							<p:outputLabel value="#{version.number}" />
+						</p:column>
+
+						<p:column style="width:32px">
+							<p:rowEditor />
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+
+				<p:tab title="Download template" id="templateTab">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="chooseTemplate" value="Template" />
+						<p:selectOneMenu id="chooseTemplate"
+							value="#{manageDocumentsBean.templateForDownload}"
+							converter="templateConverter">
+							<f:selectItems value="#{manageDocumentsBean.templates}"
+								var="template" itemLabel="#{template.name}"
+								itemValue="#{template}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+					<p:commandButton id="downloadTemplate" process="@this,templateTab"
+						value="Download"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						icon="ui-icon-arrowthick-1-s">
+						<p:fileDownload
+							value="#{manageDocumentsBean.templateForDownloadFile}" />
+					</p:commandButton>
+
 				</p:tab>
 			</p:tabView>
 

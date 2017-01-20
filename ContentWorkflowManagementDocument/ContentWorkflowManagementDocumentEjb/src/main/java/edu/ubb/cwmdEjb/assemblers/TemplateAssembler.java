@@ -23,11 +23,14 @@ public class TemplateAssembler {
 			template.setId(templateDto.getTemplateId());
 			template.setName(templateDto.getName());
 			template.setContent(templateDto.getContent());
+			template.setFileName(templateDto.getFileName());
 
 			DocumentAssembler documentAssembler = new DocumentAssembler();
 			List<Document> documents = new ArrayList<>();
-			for (DocumentDTO document : templateDto.getDocuments()) {
-				documents.add(documentAssembler.dtoToModelSimple(document));
+			if (templateDto.getDocuments() != null) {
+				for (DocumentDTO document : templateDto.getDocuments()) {
+					documents.add(documentAssembler.dtoToModelSimple(document));
+				}
 			}
 			template.setDocuments(documents);
 
@@ -45,6 +48,7 @@ public class TemplateAssembler {
 			template.setId(templateDto.getTemplateId());
 			template.setName(templateDto.getName());
 			template.setContent(templateDto.getContent());
+			template.setFileName(templateDto.getFileName());
 
 			// the list of document is not set
 
@@ -62,11 +66,14 @@ public class TemplateAssembler {
 			templateDto.setTemplateId(template.getId());
 			templateDto.setName(template.getName());
 			templateDto.setContent(template.getContent());
+			templateDto.setFileName(template.getFileName());
 
 			DocumentAssembler documentAssembler = new DocumentAssembler();
 			List<DocumentDTO> documents = new ArrayList<>();
-			for (Document document : template.getDocuments()) {
-				documents.add(documentAssembler.modelToDtoSimple(document));
+			if (template.getDocuments() != null) {
+				for (Document document : template.getDocuments()) {
+					documents.add(documentAssembler.modelToDtoSimple(document));
+				}
 			}
 			templateDto.setDocuments(documents);
 
@@ -84,6 +91,7 @@ public class TemplateAssembler {
 			templateDto.setTemplateId(template.getId());
 			templateDto.setName(template.getName());
 			templateDto.setContent(template.getContent());
+			templateDto.setFileName(template.getFileName());
 
 			// the list of documents is not set
 

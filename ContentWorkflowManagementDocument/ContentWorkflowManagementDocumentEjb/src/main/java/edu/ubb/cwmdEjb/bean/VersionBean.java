@@ -116,4 +116,16 @@ public class VersionBean implements Serializable, VersionBeanInterface {
 		}
 	}
 
+	@Override
+	public VersionDTO updateVersion(VersionDTO versionDTO) throws RemoteException {
+		Version version = versionAssembler.dtoToModel(versionDTO);
+		try {
+			VersionDTO updatedVersionDTO = versionAssembler.modelToDto(versionDAO.updateVersion(version));
+			return updatedVersionDTO;
+		} catch (DaoException e) {
+			logger.error("Version update error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
 }

@@ -14,13 +14,15 @@ public interface VersionBeanInterface {
 	VersionDTO findById(Long versionId) throws RemoteException;
 
 	Double getLatestVersionNumberForDraft(Long documentId) throws RemoteException;
-	
+
 	Double getLatestVersionNumberForFinal(Long documentId) throws RemoteException;
 
 	List<VersionDTO> getAllVersionsOfDocument(Long documentId) throws RemoteException;
 
 	void deleteVersion(VersionDTO versionDTO) throws RemoteException;
-	
+
 	List<VersionDTO> getAllVersionsFromActiveFlow(Long activeFlowId) throws RemoteException;
+
+	VersionDTO updateVersion(VersionDTO versionDTO) throws RemoteException;
 
 }

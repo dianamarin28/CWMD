@@ -22,7 +22,7 @@ public class ActiveFlowAssembler {
 
 			activeFlow.setUuid(activeFlowDto.getUuid());
 			activeFlow.setId(activeFlowDto.getActiveFlowId());
-			activeFlow.setName(activeFlowDto.getName());
+			activeFlow.setStep(activeFlowDto.getName());
 			activeFlow.setStatus(ActiveFlowStatus.valueOf(activeFlowDto.getStatus()));
 
 			FlowAssembler flowAssembler = new FlowAssembler();
@@ -50,7 +50,7 @@ public class ActiveFlowAssembler {
 
 			activeFlow.setUuid(activeFlowDto.getUuid());
 			activeFlow.setId(activeFlowDto.getActiveFlowId());
-			activeFlow.setName(activeFlowDto.getName());
+			activeFlow.setStep(activeFlowDto.getName());
 			activeFlow.setStatus(ActiveFlowStatus.valueOf(activeFlowDto.getStatus()));
 
 			FlowAssembler flowAssembler = new FlowAssembler();
@@ -73,7 +73,7 @@ public class ActiveFlowAssembler {
 
 			activeFlowDto.setUuid(activeFlow.getUuid());
 			activeFlowDto.setActiveFlowId(activeFlow.getId());
-			activeFlowDto.setName(activeFlow.getName());
+			activeFlowDto.setName(activeFlow.getStep());
 			activeFlowDto.setStatus(activeFlow.getStatus().toString());
 
 			FlowAssembler flowAssembler = new FlowAssembler();
@@ -101,7 +101,7 @@ public class ActiveFlowAssembler {
 
 			activeFlowDto.setUuid(activeFlow.getUuid());
 			activeFlowDto.setActiveFlowId(activeFlow.getId());
-			activeFlowDto.setName(activeFlow.getName());
+			activeFlowDto.setName(activeFlow.getStep());
 			activeFlowDto.setStatus(activeFlow.getStatus().toString());
 
 			FlowAssembler flowAssembler = new FlowAssembler();

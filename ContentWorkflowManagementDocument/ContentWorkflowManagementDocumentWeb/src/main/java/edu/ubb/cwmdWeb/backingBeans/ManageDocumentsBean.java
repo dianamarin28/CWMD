@@ -17,6 +17,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import edu.ubb.cwmdEjbClient.dtos.DocumentDTO;
@@ -84,6 +87,16 @@ public class ManageDocumentsBean implements Serializable {
 
 	private String status;
 
+	private TemplateDTO templateForDownload;
+
+	private StreamedContent templateForDownloadFile;
+
+	private DocumentDTO documentForVersion;
+
+	private List<VersionDTO> versionsForUpdate = null;
+
+	private List<String> versionStatuses = new ArrayList<>();
+
 	@PostConstruct
 	public void initBean() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -106,6 +119,8 @@ public class ManageDocumentsBean implements Serializable {
 			documents = documentBeanInterface.getDocumentsForAdministrator(userId);
 		}
 
+		// for update version
+		versionStatuses = new ArrayList<>(Arrays.asList("DRAFT", "FINAL"));
 	}
 
 	public String insertDocument() {
@@ -157,6 +172,10 @@ public class ManageDocumentsBean implements Serializable {
 		updateKeyWords = updateDocument.getKeywords();
 	}
 
+	public void setVersionsTableValues() {
+		versionsForUpdate = versionBeanInterface.getAllVersionsOfDocument(documentForVersion.getDocumentId());
+	}
+
 	public String updateDocumentMethod() {
 		// if (updateVersionDTO == null) {
 		// FacesContext.getCurrentInstance().addMessage(null,
@@ -178,7 +197,7 @@ public class ManageDocumentsBean implements Serializable {
 				updateDocument = documentBeanInterface.updateDocument(updateDocument);
 
 				if (updateVersionDTO != null) {
-					if (!status.equals("")) {
+					if (status != null && !status.equals("")) {
 						Double versionNumber;
 						if (status.equals("DRAFT")) {
 							versionNumber = versionBeanInterface
@@ -202,6 +221,9 @@ public class ManageDocumentsBean implements Serializable {
 					} else {
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 								"Error", "Error while inserting the new version"));
+						clearUpdateFields();
+						clearModifyVersionsFields();
+						return "ok";
 					}
 				}
 			} catch (RemoteException e) {
@@ -213,6 +235,7 @@ public class ManageDocumentsBean implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "The document was updated"));
 		}
 		clearUpdateFields();
+		clearModifyVersionsFields();
 		return "ok";
 	}
 
@@ -223,6 +246,11 @@ public class ManageDocumentsBean implements Serializable {
 		updateVersionDTO = null;
 
 		status = "";
+	}
+
+	public void clearModifyVersionsFields() {
+		documentForVersion = null;
+		versionsForUpdate = new ArrayList<>();
 	}
 
 	public void handleFileUpload(FileUploadEvent event) {
@@ -270,11 +298,13 @@ public class ManageDocumentsBean implements Serializable {
 	public boolean checkIfAnyVersionInActiveFlow(DocumentDTO documentDTO) {
 		List<VersionDTO> versionDTOs = versionBeanInterface.getAllVersionsOfDocument(documentDTO.getDocumentId());
 		for (VersionDTO versionDTO : versionDTOs) {
+			System.out
+					.println("DELETE DOC: " + versionDTO.getVersionId() + " active flow " + versionDTO.getActiveFlow());
 			if (versionDTO.getActiveFlow() != null) {
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public void delete(DocumentDTO dto) {
@@ -292,7 +322,7 @@ public class ManageDocumentsBean implements Serializable {
 			}
 
 			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info",
-					"The document " + dto.getName() + " has been deleted " );
+					"The document " + dto.getName() + " has been deleted ");
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 			documents.remove(dto);
 
@@ -319,6 +349,72 @@ public class ManageDocumentsBean implements Serializable {
 		}
 
 		clearUpdateFields();
+		clearModifyVersionsFields();
+	}
+
+	public void restoreFields(VersionDTO selectedVersionDTO) {
+		try {
+			VersionDTO versionDTO = versionBeanInterface.findById(selectedVersionDTO.getVersionId());
+			selectedVersionDTO.setFileName(versionDTO.getFileName());
+			selectedVersionDTO.setStatus(versionDTO.getStatus());
+			selectedVersionDTO.setNumber(versionDTO.getNumber());
+		} catch (RemoteException e) {
+
+		}
+	}
+
+	public void onRowEdit(RowEditEvent event) {
+		VersionDTO selectedVersionDTO = (VersionDTO) event.getObject();
+		if (selectedVersionDTO.getFileName() == null || selectedVersionDTO.getFileName().equals("")) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "The file name cannot be empty"));
+			restoreFields(selectedVersionDTO);
+			return;
+		}
+
+		try {
+			if (selectedVersionDTO.getStatus().equals("DRAFT") && selectedVersionDTO.getNumber() >= 1) {
+				// if the status is draft, the number must be < 1
+				try {
+					Double versionNumber = versionBeanInterface
+							.getLatestVersionNumberForDraft(selectedVersionDTO.getDocument().getDocumentId());
+					versionNumber += 0.1;
+					selectedVersionDTO.setNumber(versionNumber);
+				} catch (RemoteException e) {
+					// no documents with DRAFT status are saved => number = 0.1
+					selectedVersionDTO.setNumber(0.1);
+				}
+			}
+
+			if (selectedVersionDTO.getStatus().equals("FINAL")
+					&& Double.compare(selectedVersionDTO.getNumber(), 1) < 0) {
+				// if the status is final, the number should be >=1
+				try {
+					Double versionNumber = versionBeanInterface
+							.getLatestVersionNumberForFinal(selectedVersionDTO.getDocument().getDocumentId());
+					versionNumber += 1.0;
+					selectedVersionDTO.setNumber(versionNumber);
+				} catch (RemoteException e) {
+					// no documents with FINAL status are saved => number = 1
+					selectedVersionDTO.setNumber(new Double(1));
+				}
+			}
+
+			versionBeanInterface.updateVersion(selectedVersionDTO);
+			String message = "v" + ((VersionDTO) event.getObject()).getNumber();
+			FacesMessage msg = new FacesMessage("Version was edited:", message);
+			FacesContext.getCurrentInstance().addMessage(null, msg);
+		} catch (RemoteException e) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error occured while updating the version"));
+		}
+
+	}
+
+	public void onRowCancel(RowEditEvent event) {
+		String message = "v" + ((VersionDTO) event.getObject()).getNumber();
+		FacesMessage msg = new FacesMessage("Edit was cancelled for: ", message);
+		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	public TemplateDTO getTemplate() {
@@ -407,6 +503,56 @@ public class ManageDocumentsBean implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public TemplateDTO getTemplateForDownload() {
+		return templateForDownload;
+	}
+
+	public void setTemplateForDownload(TemplateDTO templateForDownload) {
+		this.templateForDownload = templateForDownload;
+	}
+
+	public StreamedContent getTemplateForDownloadFile() {
+		byte[] content = templateForDownload.getContent();
+		System.out.println(
+				"GET TEMPLATE: " + templateForDownload.getTemplateId() + " file: " + templateForDownload.getFileName());
+		InputStream is = FileConverter.convertByteArrayToInputStream(content);
+		String fileName = template.getFileName();
+
+		int pointPosition = fileName.indexOf(".");
+		String extension = fileName.substring(pointPosition, fileName.length());
+		templateForDownloadFile = new DefaultStreamedContent(is, extension, fileName);
+
+		return templateForDownloadFile;
+	}
+
+	public void setTemplateForDownloadFile(StreamedContent templateForDownloadFile) {
+		this.templateForDownloadFile = templateForDownloadFile;
+	}
+
+	public DocumentDTO getDocumentForVersion() {
+		return documentForVersion;
+	}
+
+	public void setDocumentForVersion(DocumentDTO documentForVersion) {
+		this.documentForVersion = documentForVersion;
+	}
+
+	public List<VersionDTO> getVersionsForUpdate() {
+		return versionsForUpdate;
+	}
+
+	public void setVersionsForUpdate(List<VersionDTO> versionsForUpdate) {
+		this.versionsForUpdate = versionsForUpdate;
+	}
+
+	public List<String> getVersionStatuses() {
+		return versionStatuses;
+	}
+
+	public void setVersionStatuses(List<String> versionStatuses) {
+		this.versionStatuses = versionStatuses;
 	}
 
 }

@@ -1,5 +1,6 @@
 package edu.ubb.cwmdEjb.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -7,6 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +25,20 @@ public class VersionDAO {
 
 	@PersistenceContext(unitName = "cwmd")
 	private EntityManager entityManager;
+
+	public List<Version> getVersions() throws DaoException {
+		try {
+			CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+			CriteriaQuery<Version> cq = cb.createQuery(Version.class);
+			Root<Version> root = cq.from(Version.class);
+			CriteriaQuery<Version> allEntities = cq.select(root);
+			TypedQuery<Version> tq = entityManager.createQuery(allEntities);
+			return tq.getResultList();
+		} catch (PersistenceException e) {
+			logger.error("Versions retrieval failed", e);
+			throw new DaoException("Versions retrieval failed", e);
+		}
+	}
 
 	public void insertVersion(Version version) throws DaoException {
 		try {
@@ -100,11 +118,20 @@ public class VersionDAO {
 
 	public List<Version> getAllVersionsOfDocument(Long documentId) throws DaoException {
 		try {
-			TypedQuery<Version> query = entityManager
-					.createQuery("SELECT v FROM Version v JOIN v.document d WHERE d.id = :documentId", Version.class);
-			query.setParameter("documentId", documentId);
-			List<Version> versions = query.getResultList();
-			return versions;
+			// TypedQuery<Version> query = entityManager
+			// .createQuery("SELECT v FROM Version v JOIN v.document d WHERE
+			// d.id = :documentId", Version.class);
+			// query.setParameter("documentId", documentId);
+			// List<Version> versions = query.getResultList();
+			List<Version> versions = getVersions();
+			List<Version> validVersions = new ArrayList<>();
+			for (Version v : versions) {
+				if (v.getDocument().getId().equals(documentId)) {
+					validVersions.add(v);
+				}
+			}
+
+			return validVersions;
 		} catch (PersistenceException e) {
 			logger.error("Versions retrieval by document id failed", e);
 			throw new DaoException("Version retrieval by document id failed", e);
@@ -121,6 +148,17 @@ public class VersionDAO {
 		} catch (PersistenceException e) {
 			logger.error("Versions retrieval by active flow id failed", e);
 			throw new DaoException("Versions retrieval by active flow id failed", e);
+		}
+	}
+
+	public Version updateVersion(Version version) throws DaoException {
+		try {
+			version = entityManager.merge(version);
+			entityManager.flush();
+			return version;
+		} catch (PersistenceException e) {
+			logger.error("Version update failed", e);
+			throw new DaoException("Version update failed", e);
 		}
 	}
 

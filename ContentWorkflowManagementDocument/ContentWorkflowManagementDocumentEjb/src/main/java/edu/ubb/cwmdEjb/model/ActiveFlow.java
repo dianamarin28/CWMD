@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,9 +18,12 @@ import javax.persistence.Table;
 public class ActiveFlow extends BaseEntity {
 
 	private static final long serialVersionUID = 5167730237414597243L;
-
-	@Column(name = "name")
+	
+	@Column(name = "name", nullable = false)
 	private String name;
+
+	@Column(name = "step")
+	private String step;
 
 	@JoinColumn(name = "flowId")
 	@ManyToOne
@@ -29,7 +33,7 @@ public class ActiveFlow extends BaseEntity {
 	@ManyToOne
 	private User user;
 
-	@OneToMany(mappedBy = "activeFlow", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "activeFlow", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Version> versions;
 
 	@Column(name = "status")
@@ -38,6 +42,14 @@ public class ActiveFlow extends BaseEntity {
 
 	public ActiveFlow() {
 		super();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Flow getFlow() {
@@ -72,12 +84,12 @@ public class ActiveFlow extends BaseEntity {
 		this.status = status;
 	}
 
-	public String getName() {
-		return name;
+	public String getStep() {
+		return step;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStep(String step) {
+		this.step = step;
 	}
 
 }

@@ -2,8 +2,10 @@ package edu.ubb.cwmdEjb.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,10 +20,13 @@ public class Template extends BaseEntity {
 	private String name;
 
 	@Lob
-	@Column(name = "content")//, nullable = false)
+	@Column(name = "content", nullable = false)
 	private byte[] content;
 
-	@OneToMany(mappedBy = "template")
+	@Column(name = "fileName", nullable = false)
+	private String fileName;
+
+	@OneToMany(mappedBy = "template", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
 	private List<Document> documents;
 
 	public Template() {
@@ -42,6 +47,14 @@ public class Template extends BaseEntity {
 
 	public void setContent(byte[] content) {
 		this.content = content;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	public List<Document> getDocuments() {

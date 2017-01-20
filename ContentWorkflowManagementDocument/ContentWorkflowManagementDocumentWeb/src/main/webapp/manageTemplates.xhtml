@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="manageTemplatesForm">
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:tabView id="manageTemplatesTabs">
+				<p:tab title="Add template" id="insertTemplateTab">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="name" value="Name" />
+						<p:inputText id="name" value="#{manageTemplatesBean.name}" />
+					</h:panelGrid>
+
+					<p:fileUpload
+						fileUploadListener="#{manageTemplatesBean.handleFileUpload}"
+						mode="advanced" dragDropSupport="false"
+						update="#{p:component('msgs')}" auto="true" fileLimit="1"
+						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
+
+					<p:commandButton value="Insert"
+						actionListener="#{manageTemplatesBean.insertTemplate}"
+						action="manageTemplates.xhtml?faces-redirect=true"
+						update="#{p:component('msgs')}" process="@this,insertTemplateTab"></p:commandButton>
+				</p:tab>
+
+				<p:tab title="Delete template" id="deleteTemplateTab">
+					<p:dataTable id="templatesTable"
+						value="#{manageTemplatesBean.templates}" var="template"
+						editable="true">
+
+						<f:facet name="header">
+							<h:outputText value="Templates table"></h:outputText>
+						</f:facet>
+
+						<p:column headerText="Name">
+							<p:outputLabel value="#{template.name}" />
+						</p:column>
+
+						<p:column headerText="File name">
+							<p:outputLabel value="#{template.fileName}" />
+						</p:column>
+
+						<p:column style="width:40px">
+							<p:column>
+								<p:commandButton icon="ui-icon-trash"
+									process="@this,templatesTable"
+									actionListener="#{manageTemplatesBean.delete(template)}"
+									update="#{p:component('msgs')}  #{p:component('manageTemplatesTabs')}">
+									<p:confirm header="Confirmation" message="Are you sure?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</p:column>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,16 +1,24 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-public class FlowDTO {
+public class FlowDTO implements Serializable {
+
+	private static final long serialVersionUID = 7818135554577168785L;
 
 	private Long flowId;
 
 	private String uuid;
 
 	private String name;
+	
+	private int noOfParticipants;
 
-	private List<FunctionDTO> functions;
+	// private List<FunctionDTO> functions;
+
+	Map<String, Long> participants;
 
 	private List<ActiveFlowDTO> activeFlows;
 
@@ -20,14 +28,6 @@ public class FlowDTO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<FunctionDTO> getFunctions() {
-		return functions;
-	}
-
-	public void setFunctions(List<FunctionDTO> functions) {
-		this.functions = functions;
 	}
 
 	public List<ActiveFlowDTO> getActiveFlows() {
@@ -52,6 +52,22 @@ public class FlowDTO {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+
+	public Map<String, Long> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(Map<String, Long> participants) {
+		this.participants = participants;
+	}
+
+	public int getNoOfParticipants() {
+		return noOfParticipants;
+	}
+
+	public void setNoOfParticipants(int noOfParticipants) {
+		this.noOfParticipants = noOfParticipants;
 	}
 
 }
