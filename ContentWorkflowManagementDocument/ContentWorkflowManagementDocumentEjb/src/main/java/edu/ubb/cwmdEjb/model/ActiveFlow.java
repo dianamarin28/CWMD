@@ -17,6 +17,9 @@ import javax.persistence.Table;
 public class ActiveFlow extends BaseEntity {
 
 	private static final long serialVersionUID = 5167730237414597243L;
+	
+	@Column(name = "name", nullable = false)
+	private String name;
 
 	@Column(name = "step")
 	private String step;
@@ -38,6 +41,14 @@ public class ActiveFlow extends BaseEntity {
 
 	public ActiveFlow() {
 		super();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Flow getFlow() {

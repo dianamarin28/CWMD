@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import edu.ubb.cwmdEjb.assemblers.DocumentAssembler;
 import edu.ubb.cwmdEjb.dao.DaoException;
 import edu.ubb.cwmdEjb.dao.DocumentDAO;
+import edu.ubb.cwmdEjb.dao.TemplateDAO;
 import edu.ubb.cwmdEjb.model.Document;
+import edu.ubb.cwmdEjb.model.Template;
 import edu.ubb.cwmdEjbClient.dtos.DocumentDTO;
 import edu.ubb.cwmdEjbClient.interfaces.DocumentBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.RemoteException;
@@ -30,11 +32,17 @@ public class DocumentBean implements Serializable, DocumentBeanInterface {
 	@EJB
 	private DocumentDAO documentDAO;
 
+	@EJB
+	private TemplateDAO templateDAO;
+
 	private DocumentAssembler documentAssembler = new DocumentAssembler();
 
 	@Override
 	public void insertDocument(DocumentDTO documentDTO) throws RemoteException {
 		Document document = documentAssembler.dtoToModel(documentDTO);
+		Long templateId = document.getTemplate().getId();
+		Template template = templateDAO.findById(templateId);
+		document.setTemplate(template);
 		try {
 			documentDAO.insertDocument(document);
 		} catch (DaoException e) {

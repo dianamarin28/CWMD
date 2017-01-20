@@ -124,4 +124,15 @@ public class VersionDAO {
 		}
 	}
 
+	public Version updateVersion(Version version) throws DaoException {
+		try {
+			version = entityManager.merge(version);
+			entityManager.flush();
+			return version;
+		} catch (PersistenceException e) {
+			logger.error("Version update failed", e);
+			throw new DaoException("Version update failed", e);
+		}
+	}
+
 }

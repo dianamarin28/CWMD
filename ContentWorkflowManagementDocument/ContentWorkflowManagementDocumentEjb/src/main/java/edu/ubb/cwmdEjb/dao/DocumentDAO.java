@@ -151,5 +151,18 @@ public class DocumentDAO {
 			throw new DaoException("Document retrieval by and user id for a list of users failed", e);
 		}
 	}
-
+	
+	public List<Document> getDocumentsForTemplate(Long templateId)  throws DaoException {
+		try {
+			TypedQuery<Document> query = entityManager
+					.createQuery("SELECT d FROM Document d JOIN d.template t WHERE t.id = :templateId", Document.class);
+			query.setParameter("templateId", templateId);
+			List<Document> documnents = query.getResultList();
+			return documnents;
+		} catch (PersistenceException e) {
+			logger.error("Document retrieval by template id failed", e);
+			throw new DaoException("Document retrieval by and template id failed", e);
+		}
+	}
+	
 }

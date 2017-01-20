@@ -53,4 +53,24 @@ public class TemplateDAO {
 		}
 	}
 
+	public void insertTemplate(Template template) throws DaoException {
+		try {
+			entityManager.persist(template);
+			entityManager.flush();
+		} catch (PersistenceException e) {
+			logger.error("Template insertion failed", e);
+			throw new DaoException("Template insertion failed", e);
+		}
+	}
+
+	public void deleteTemplate(Template template) throws DaoException {
+		try {
+			template = findById(template.getId());
+			entityManager.remove(template);
+		} catch (PersistenceException e) {
+			logger.error("Template deletion failed", e);
+			throw new DaoException("Template deletion failed", e);
+		}
+	}
+
 }

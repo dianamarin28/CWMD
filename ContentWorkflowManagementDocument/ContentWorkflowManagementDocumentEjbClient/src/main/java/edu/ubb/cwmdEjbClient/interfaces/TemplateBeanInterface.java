@@ -13,4 +13,9 @@ public interface TemplateBeanInterface {
 
 	List<TemplateDTO> getTemplates() throws RemoteException;
 
+	void insertTemplate(TemplateDTO templateDTO) throws RemoteException;
+
+	void deleteTemplate(TemplateDTO templateDTO) throws RemoteException;
+
+	boolean templateHasDocuments(TemplateDTO templateDTO) throws RemoteException;
 }

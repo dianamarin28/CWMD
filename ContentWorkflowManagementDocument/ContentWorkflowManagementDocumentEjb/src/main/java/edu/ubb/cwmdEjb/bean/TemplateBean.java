@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import edu.ubb.cwmdEjb.assemblers.TemplateAssembler;
 import edu.ubb.cwmdEjb.dao.DaoException;
+import edu.ubb.cwmdEjb.dao.DocumentDAO;
 import edu.ubb.cwmdEjb.dao.TemplateDAO;
+import edu.ubb.cwmdEjb.model.Document;
 import edu.ubb.cwmdEjb.model.Template;
 import edu.ubb.cwmdEjbClient.dtos.TemplateDTO;
 import edu.ubb.cwmdEjbClient.interfaces.RemoteException;
@@ -29,6 +31,9 @@ public class TemplateBean implements Serializable, TemplateBeanInterface {
 
 	@EJB
 	private TemplateDAO templateDao;
+	
+	@EJB
+	private DocumentDAO documentDAO;
 
 	private TemplateAssembler templateAssembler = new TemplateAssembler();
 
@@ -56,6 +61,50 @@ public class TemplateBean implements Serializable, TemplateBeanInterface {
 			return templatesDTOs;
 		} catch (DaoException e) {
 			logger.error("Error while retrieving the templates " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void insertTemplate(TemplateDTO templateDTO) throws RemoteException {
+		Template template = templateAssembler.dtoToModel(templateDTO);
+		try {
+			templateDao.insertTemplate(template);
+		} catch (DaoException e) {
+			logger.error("Template insertion error: " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void deleteTemplate(TemplateDTO templateDTO) throws RemoteException {
+		Template template = templateAssembler.dtoToModel(templateDTO);
+
+		try {
+			templateDao.deleteTemplate(template);
+		} catch (DaoException e) {
+			logger.error("Template deletion error : " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean templateHasDocuments(TemplateDTO templateDTO) throws RemoteException {
+//		Template templateById = templateDao.findById(templateDTO.getTemplateId());
+//		if (templateById.getDocuments().isEmpty()) {
+//			System.out.println("BEAN : template " + templateById.getId() + " docs: " + templateById.getDocuments());
+//			return false;
+//		}
+//		return true;
+
+		try {
+			List<Document> documents = documentDAO.getDocumentsForTemplate(templateDTO.getTemplateId());
+			if(documents.isEmpty()) {
+				return false;
+			}
+			return true;
+		} catch (DaoException e) {
+			logger.error("Get all documents of a template error " + e);
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
