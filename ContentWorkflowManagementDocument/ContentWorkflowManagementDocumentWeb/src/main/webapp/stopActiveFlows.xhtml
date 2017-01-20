@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="stopActiveFlows">
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:dataTable id="activeFlows"
+				value="#{stopActiveFlowsBean.activeFlows}" var="activeFlow"
+				editable="true">
+
+				<f:facet name="header">
+					<h:outputText value="Active Flows Table"></h:outputText>
+				</f:facet>
+
+				<p:column headerText="Name">
+					<h:outputText value="#{activeFlow.name}" />
+				</p:column>
+
+				<p:column headerText="Flow name">
+					<h:outputText value="#{activeFlow.flow.name}" />
+				</p:column>
+
+				<p:column headerText="Initiator user name">
+					<h:outputText value="#{activeFlow.user.userName}" />
+				</p:column>
+
+				<p:column style="width:40px">
+					<p:column>
+						<p:commandButton icon="ui-icon-trash" process="@this,activeFlows"
+							actionListener="#{stopActiveFlowsBean.delete(activeFlow)}"
+							update="#{p:component('msgs')}  #{p:component('activeFlows')}">
+							<p:confirm header="Confirmation" message="Are you sure?"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
