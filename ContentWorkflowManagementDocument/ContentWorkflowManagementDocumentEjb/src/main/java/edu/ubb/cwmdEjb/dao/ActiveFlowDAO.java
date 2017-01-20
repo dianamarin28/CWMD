@@ -115,4 +115,18 @@ public class ActiveFlowDAO {
 		}
 	}
 
+	public List<ActiveFlow> getActiveFlowForFlow(Long flowId) throws DaoException {
+		try {
+			TypedQuery<ActiveFlow> query = entityManager
+					.createQuery("SELECT a FROM ActiveFlow a JOIN a.flow f WHERE f.id = :flowId", ActiveFlow.class);
+			query.setParameter("flowId", flowId);
+			List<ActiveFlow> activeFlows = query.getResultList();
+			return activeFlows;
+		} catch (PersistenceException e) {
+			logger.error("Active flows retrieval by flow id failed", e);
+			throw new DaoException("Active flows retrieval by and flow id failed", e);
+		}
+
+	}
+
 }

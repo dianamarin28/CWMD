@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="manageDataForm">
+			<p:growl id="msgs" showDetail="true" />
+
+			<h:panelGrid columns="2">
+				<p:outputLabel for="name" value="Name" />
+				<p:inputText id="name" value="#{manageFlowsBean.name}" />
+			</h:panelGrid>
+			<br />
+			<br />
+
+			<p:outputLabel for="pickFunctions"
+				value="Please add the function in the order in which you wish them to appear in the flow" />
+			<p:pickList id="pickFunctions"
+				value="#{manageFlowsBean.dualListFunction}" var="function"
+				itemLabel="#{function.type}" itemValue="#{function}"
+				converter="functionConverter" />
+
+			<h:commandButton value="Create flow"
+				action="#{manageFlowsBean.insertFlow}"></h:commandButton>
+			<br />
+			<br />
+
+			<p:dataTable id="flows" value="#{manageFlowsBean.flows}" var="flow"
+				editable="true">
+				<f:facet name="header">
+					<h:outputText value="Flows Table"></h:outputText>
+				</f:facet>
+
+				<p:column headerText="Name">
+					<h:outputText value="#{flow.name}" />
+				</p:column>
+				
+				<p:column headerText="Number of participants">
+					<h:outputText value="#{flow.noOfParticipants}" />
+				</p:column>
+				
+				<p:column style="width:40px">
+					<p:column>
+						<p:commandButton icon="ui-icon-trash" process="@this,flows"
+							actionListener="#{manageFlowsBean.delete(flow)}"
+							update="#{p:component('msgs')}  #{p:component('flows')}">
+							<p:confirm header="Confirmation" message="Are you sure?"
+								icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</p:column>
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
