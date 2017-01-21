@@ -32,6 +32,8 @@ public class ActiveFlowAssembler {
 			UserAssembler userAssembler = new UserAssembler();
 			activeFlow.setUser(userAssembler.dtoToModelSimple(activeFlowDto.getUser()));
 
+			activeFlow.setParticipants(activeFlowDto.getParticipants());
+
 			VersionAssembler versionAssembler = new VersionAssembler();
 			List<Version> versions = new ArrayList<>();
 			for (VersionDTO versionDto : activeFlowDto.getVersions()) {
@@ -84,6 +86,8 @@ public class ActiveFlowAssembler {
 
 			UserAssembler userAssembler = new UserAssembler();
 			activeFlowDto.setUser(userAssembler.modelToDtoSimple(activeFlow.getUser()));
+
+			activeFlowDto.setParticipants(activeFlow.getParticipants());
 
 			VersionAssembler versionAssembler = new VersionAssembler();
 			List<VersionDTO> versionDtos = new ArrayList<>();

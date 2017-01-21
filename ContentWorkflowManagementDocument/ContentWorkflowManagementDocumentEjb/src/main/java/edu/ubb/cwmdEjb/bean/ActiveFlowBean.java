@@ -1,7 +1,6 @@
 package edu.ubb.cwmdEjb.bean;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +20,8 @@ import edu.ubb.cwmdEjb.model.ActiveFlow;
 import edu.ubb.cwmdEjb.model.Flow;
 import edu.ubb.cwmdEjb.model.User;
 import edu.ubb.cwmdEjbClient.dtos.ActiveFlowDTO;
-import edu.ubb.cwmdEjbClient.dtos.UserDTO;
 import edu.ubb.cwmdEjbClient.dtos.FlowDTO;
-
-import edu.ubb.cwmdEjbClient.interfaces.FlowBeanInterface;
+import edu.ubb.cwmdEjbClient.dtos.UserDTO;
 import edu.ubb.cwmdEjbClient.interfaces.ActiveFlowBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.RemoteException;
 
@@ -41,8 +38,8 @@ public class ActiveFlowBean implements Serializable, ActiveFlowBeanInterface {
 
 	private ActiveFlowAssembler activeFlowAssembler = new ActiveFlowAssembler();
 	private FlowAssembler flowAssembler = new FlowAssembler();
-	private UserAssembler userAssembler = new UserAssembler();	
-	
+	private UserAssembler userAssembler = new UserAssembler();
+
 	@Override
 	public ActiveFlowDTO findById(Long activeFlowId) throws RemoteException {
 		ActiveFlowDTO activeFlowDTO = new ActiveFlowDTO();
@@ -126,18 +123,31 @@ public class ActiveFlowBean implements Serializable, ActiveFlowBeanInterface {
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
+
 	@Override
-	public Long createActiveFlow(UserDTO userDTO, FlowDTO flowDTO, String flowName) throws RemoteException{
-		try{
+	public Long createActiveFlow(UserDTO userDTO, FlowDTO flowDTO, String flowName) throws RemoteException {
+		try {
 			User user = userAssembler.dtoToModel(userDTO);
 			Flow flow = flowAssembler.dtoToModel(flowDTO);
 			activeFlowDAO.createActiveFlow(user, flow, flowName);
-		}
-		catch(DaoException e){
+		} catch (DaoException e) {
 			logger.error("Create active flow error: " + e);
 			throw new RemoteException(e.getMessage(), e);
 		}
 		return new Long(1);
+	}
+
+	@Override
+	public void insertActiveFlow(ActiveFlowDTO activeFlowDTO) throws RemoteException {
+		ActiveFlow activeFlow = activeFlowAssembler.dtoToModel(activeFlowDTO);
+
+		try {
+			activeFlowDAO.insertActiveFlow(activeFlow);
+
+		} catch (DaoException e) {
+			logger.error("insert active flow error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
 	}
 
 }
