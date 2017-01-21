@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="initiateFlow">
+			
+
+			<h:panelGrid columns="3">
+				<p:outputLabel for="selectToView" value="Select documents" />
+				<p:selectOneMenu id="selectToView"
+					value="#{initiateFlowBean.chosenDocument}"
+					converter="documentConverter">
+					<p:ajax listener="#{initiateFlowBean.setDocumentVersions}"
+						update="viewVersions" />
+					<f:selectItem itemLabel="Select a document" itemValue="#{null}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{workingAreaBean.documents}" var="document"
+						itemLabel="#{document.name}" itemValue="#{document}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<h:panelGrid columns="1" id="viewVersions">
+				<p:outputLabel for="versionsOfDoc" value="Select a version" />
+				<p:selectOneMenu id="versionsOfDoc"
+					value="#{initiateFlowBean.chosenVersion}" converter="versionConverter">
+					<f:selectItem itemLabel="Select a version" itemValue="#{null}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{initiateFlowBean.versionsOfDocument}"
+						var="version" itemLabel="v#{version.number} - #{version.fileName}"
+						itemValue="#{version}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<p:commandButton 
+					actionListener="#{initiateFlowBean.addVersionInCurrentFlow}" value="Add document to flow">
+			</p:commandButton>
+			
+			
+		<h:panelGrid columns="1" id="viewTypesOfFlow">
+				<p:outputLabel for="flowType" value="Select flow type" />
+				<p:selectOneMenu id="flowType"
+					value="#{initiateFlowBean.flowType}" converter="flowConverter">
+					<f:selectItem itemLabel="Select a type" itemValue="#{null}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{initiateFlowBean.flows}"
+						var="flow" itemLabel="v#{flow.name}"
+						itemValue="#{flow}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+		<p:commandButton 
+					actionListener="#{initiateFlowBean.startFlow}" value="Start flow">
+			</p:commandButton>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

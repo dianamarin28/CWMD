@@ -61,12 +61,14 @@ public class FlowDAO {
 	}
 
 	public List<Flow> getFlows() throws DaoException {
+		
 		try {
 			CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Flow> cq = cb.createQuery(Flow.class);
 			Root<Flow> root = cq.from(Flow.class);
 			CriteriaQuery<Flow> allEntities = cq.select(root);
 			TypedQuery<Flow> tq = entityManager.createQuery(allEntities);
+			System.out.println("size of flows: "+tq.getResultList().size());
 			return tq.getResultList();
 
 		} catch (PersistenceException e) {
