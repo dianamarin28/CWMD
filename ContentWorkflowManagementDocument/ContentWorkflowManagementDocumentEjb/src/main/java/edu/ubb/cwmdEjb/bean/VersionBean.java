@@ -127,5 +127,20 @@ public class VersionBean implements Serializable, VersionBeanInterface {
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public 	void addActiveFlowIdToVersions(Long activeFlowId, List<VersionDTO> versions) throws RemoteException{
+		try{
+			for(VersionDTO versionDTO : versions){
+				Version version = versionAssembler.dtoToModel(versionDTO);
+				versionDAO.addActiveFlowIdToVersion(version, activeFlowId);
+			}
+		}
+		catch(DaoException e){
+			logger.error("Add active flow id to version error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+	
 
 }

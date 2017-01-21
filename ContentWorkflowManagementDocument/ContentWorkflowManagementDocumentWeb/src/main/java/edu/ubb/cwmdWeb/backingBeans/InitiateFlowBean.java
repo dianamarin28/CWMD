@@ -1,30 +1,31 @@
 package edu.ubb.cwmdWeb.backingBeans;
+import javax.faces.bean.RequestScoped;
+import java.io.ByteArrayInputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
-import org.primefaces.model.DefaultStreamedContent;
-
 import edu.ubb.cwmdEjbClient.dtos.DocumentDTO;
+import edu.ubb.cwmdEjbClient.dtos.FlowDTO;
 import edu.ubb.cwmdEjbClient.dtos.UserDTO;
 import edu.ubb.cwmdEjbClient.dtos.VersionDTO;
-import edu.ubb.cwmdEjbClient.dtos.FlowDTO;
+import edu.ubb.cwmdEjbClient.interfaces.ActiveFlowBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.DocumentBeanInterface;
+import edu.ubb.cwmdEjbClient.interfaces.FlowBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.UserBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.VersionBeanInterface;
-import edu.ubb.cwmdEjbClient.interfaces.FlowBeanInterface;
-
-import java.io.ByteArrayInputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @ManagedBean
 @SessionScoped
+@RequestScoped
 public class InitiateFlowBean  implements Serializable{
 	private static final long serialVersionUID = -6123801107083963826L;
 	@EJB
@@ -39,6 +40,9 @@ public class InitiateFlowBean  implements Serializable{
 	@EJB
 	private FlowBeanInterface flowBeanInterface;
 	
+	@EJB
+	private ActiveFlowBeanInterface activeBeanInterface;
+	
 	private String userName;
 
 	private List<DocumentDTO> documents = new ArrayList<>();
@@ -47,10 +51,10 @@ public class InitiateFlowBean  implements Serializable{
 	private VersionDTO chosenVersion;
 	private List<VersionDTO> versions = new ArrayList<>();
 	private List<VersionDTO> versionsOfDocument = new ArrayList<>();
-	private Long userId;
+	private UserDTO userDTO;
 	private FlowDTO flowType;
 	private List<FlowDTO> flows = new ArrayList<>();
-	
+	private String flowName;
 	
 	@PostConstruct
 	public void initBean() {
@@ -58,9 +62,9 @@ public class InitiateFlowBean  implements Serializable{
 		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
 		userName = session.getAttribute("userName").toString();
-		UserDTO userDTO = userBeanInterface.getByUserName(userName);
-		userId = userDTO.getUserId();
-
+		userDTO = userBeanInterface.getByUserName(userName);
+		Long userId = userDTO.getUserId();
+		
 		documents = documentBeanInterface.getDocumentsForUserID(userId);
 		flows = flowBeanInterface.getFlows();
 		
@@ -117,9 +121,20 @@ public class InitiateFlowBean  implements Serializable{
 		this.flows = flows;
 	}
 	
-	public void startFlow(){
-		
+	public void setFlowName(String flowName){
+		this.flowName = flowName;
 	}
+	
+	public String getFlowName(){
+		return this.flowName;
+	}
+	
+	public void startFlow(){
+		System.out.println("startFlow invoked");
+		Long activeFlowId = activeBeanInterface.createActiveFlow(userDTO, flowType, flowName);
+		versionBeanInterface.addActiveFlowIdToVersions(activeFlowId, versions);
+	    
+	  }
 	
 	
 }
