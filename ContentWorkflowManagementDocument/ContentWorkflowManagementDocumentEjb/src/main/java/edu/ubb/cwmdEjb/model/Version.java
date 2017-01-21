@@ -10,8 +10,12 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
+
 @Entity
 @Table(name = "version")
+@Cache(type = CacheType.NONE)
 public class Version extends BaseEntity {
 
 	private static final long serialVersionUID = 3666141490596605648L;

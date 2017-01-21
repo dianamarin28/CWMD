@@ -1,6 +1,7 @@
 package edu.ubb.cwmdWeb.backingBeans;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +18,10 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.event.RowEditEvent;
 
 import edu.ubb.cwmdEjbClient.dtos.FunctionDTO;
+import edu.ubb.cwmdEjbClient.dtos.LogDTO;
 import edu.ubb.cwmdEjbClient.dtos.UserDTO;
 import edu.ubb.cwmdEjbClient.interfaces.FunctionBeanInterface;
+import edu.ubb.cwmdEjbClient.interfaces.LogBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.RemoteException;
 import edu.ubb.cwmdEjbClient.interfaces.UserBeanInterface;
 import edu.ubb.cwmdWeb.util.EmailHelper;
@@ -31,9 +34,12 @@ public class ManageUsers implements Serializable {
 
 	@EJB
 	private UserBeanInterface userBeanInterface;
-	
+
 	@EJB
 	private FunctionBeanInterface functionBeanInterface;
+
+	@EJB
+	private LogBeanInterface logBeanInterface;
 
 	private List<UserDTO> userList;
 
@@ -57,29 +63,26 @@ public class ManageUsers implements Serializable {
 
 	private FunctionDTO function;
 
-	
 	private List<FunctionDTO> functionsList = new ArrayList<>();
 
 	@PostConstruct
 	public void initBean() {
-		 FacesContext facesContext = FacesContext.getCurrentInstance();
-		 HttpSession session = (HttpSession)
-		 facesContext.getExternalContext().getSession(false);
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
-		
-		 String userName = session.getAttribute("userName").toString();
+		String userName = session.getAttribute("userName").toString();
 
 		userRoles = new ArrayList<>(Arrays.asList("ADMINISTRATOR", "CONTRIBUTOR", "MANAGER", "READER"));
-		
-		//get user that belong to a department///
-		
-		UserDTO user =userBeanInterface.getByUserName(userName);
+
+		// get user that belong to a department///
+
+		UserDTO user = userBeanInterface.getByUserName(userName);
 		Long depId = user.getFunction().getDepartment().getDepartmentId();
 
 		String departmentName = user.getFunction().getDepartment().getName();
 		userList = userBeanInterface.getUserFromDepartment(depId);
-		
-	functionsList = functionBeanInterface.getFunctionsByDepartment(departmentName);
+
+		functionsList = functionBeanInterface.getFunctionsByDepartment(departmentName);
 	}
 
 	public UserDTO getUserById(Long id) {
@@ -121,15 +124,22 @@ public class ManageUsers implements Serializable {
 		try {
 
 			userBeanInterface.updateUser(selectedUser, false);
+			// insert in log table
+			UserDTO loggedInUser = userBeanInterface.getByUserName(userName);
+			LogDTO logDTO = new LogDTO();
+			logDTO.setDate(LocalDate.now());
+			logDTO.setLogActionType("USER_DATA_MODIFICATION");
+			logDTO.setUserDTO(loggedInUser);
+			logBeanInterface.insertLog(logDTO);
+
+			FacesMessage msg = new FacesMessage("User was edited:", selectedUser.getUserName());
+			FacesContext.getCurrentInstance().addMessage(null, msg);
 
 		} catch (RemoteException e) {
 
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error while updating the user"));
 		}
-
-		FacesMessage msg = new FacesMessage("User was edited:", selectedUser.getUserName());
-		FacesContext.getCurrentInstance().addMessage(null, msg);
 
 	}
 
@@ -147,15 +157,15 @@ public class ManageUsers implements Serializable {
 			if (userBeanInterface.getByUserName(userName) != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User Name already exists"));
-			} else if(userRole == null || userRole.equals("")){
+			} else if (userRole == null || userRole.equals("")) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "User Role can not be empty"));
-				
-			}else if(function == null){
+
+			} else if (function == null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Function can not be empty"));
-				
-			}else {
+
+			} else {
 				userDTO = new UserDTO();
 				userDTO.setFirstName(firstName);
 				userDTO.setFunction(function);
@@ -167,47 +177,62 @@ public class ManageUsers implements Serializable {
 
 				try {
 					userBeanInterface.insertUser(userDTO);
+
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "User was inserted"));
+
+					// insert in log table
+					UserDTO loggedInUser = userBeanInterface.getByUserName(userName);
+					LogDTO logDTO = new LogDTO();
+					logDTO.setDate(LocalDate.now());
+					logDTO.setLogActionType("USER_CREATION");
+					logDTO.setUserDTO(loggedInUser);
+					logBeanInterface.insertLog(logDTO);
 				} catch (RemoteException e) {
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error while inserting the user"));
 				}
 
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "User was inserted"));
 			}
 		}
 
 		return "ok";
 	}
-	
+
 	public void rowDelete(UserDTO dto) {
-		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,"Info",
-				"User" + dto.getUserName());
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "User" + dto.getUserName());
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 		userList.remove(dto);
 		try {
 			userBeanInterface.deleteUser(dto);
 		} catch (RemoteException e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error",
-					"Error while deleting"));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error while deleting"));
 		}
 
 	}
-	
+
 	public void resetPassword(UserDTO dto) {
-		//reset password
+		// reset password
 		String password = UUID.randomUUID().toString().substring(0, 7);
 		dto.setPassword(password);
 		userBeanInterface.updateUser(dto, true);
-		
-		//send email
+
+		// send email
 		String message = "Dear " + dto.getUserName() + ",\n\n" + "Your new password is:" + password + "\n";
 		String subject = "Reset password";
 		EmailHelper.sendEmail(dto.getEmail(), subject, message);
-		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,"Info",
-				"Password was reseted");
+		FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Info", "Password was reseted");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
-		
+
+		// insert in log table
+		UserDTO loggedInUser = userBeanInterface.getByUserName(userName);
+		LogDTO logDTO = new LogDTO();
+		logDTO.setDate(LocalDate.now());
+		logDTO.setLogActionType("PASSWORD_RESET");
+		logDTO.setUserDTO(loggedInUser);
+		logBeanInterface.insertLog(logDTO);
+
 	}
 
 	public void setUserBeanInterface(UserBeanInterface userBeanInterface) {

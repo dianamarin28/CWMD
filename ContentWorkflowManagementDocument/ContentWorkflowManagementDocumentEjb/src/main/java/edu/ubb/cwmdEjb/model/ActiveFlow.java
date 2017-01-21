@@ -13,8 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
+
 @Entity
 @Table(name = "activeFlow")
+@Cache(type = CacheType.NONE)
 public class ActiveFlow extends BaseEntity {
 
 	private static final long serialVersionUID = 5167730237414597243L;
