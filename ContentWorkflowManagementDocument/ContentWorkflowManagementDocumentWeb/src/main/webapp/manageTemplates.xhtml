@@ -26,10 +26,10 @@
 						update="#{p:component('msgs')}" auto="true" fileLimit="1"
 						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
 
-					<p:commandButton value="Insert"
-						actionListener="#{manageTemplatesBean.insertTemplate}"
-						action="manageTemplates.xhtml?faces-redirect=true"
-						update="#{p:component('msgs')}" process="@this,insertTemplateTab"></p:commandButton>
+					<h:commandButton value="Insert"
+						action="#{manageTemplatesBean.insertTemplate}"
+						execute="insertTemplateTab">
+					</h:commandButton>
 				</p:tab>
 
 				<p:tab title="Delete template" id="deleteTemplateTab">

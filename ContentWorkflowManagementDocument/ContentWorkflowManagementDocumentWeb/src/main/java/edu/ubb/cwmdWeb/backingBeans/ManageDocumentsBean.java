@@ -131,7 +131,10 @@ public class ManageDocumentsBean implements Serializable {
 		} else if (versionDTO == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "A file has to be uploaded"));
-		} else if (name == null || name.equals("")) {
+		} else if(template == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Template can not be null"));
+		}else if (name == null || name.equals("")) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Name cannot be empty"));
 		} else if (docAbstract == null || docAbstract.equals("")) {
@@ -514,6 +517,11 @@ public class ManageDocumentsBean implements Serializable {
 	}
 
 	public StreamedContent getTemplateForDownloadFile() {
+		if(templateForDownload == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Template can not be null."));
+			return null;
+		}
 		byte[] content = templateForDownload.getContent();
 		System.out.println(
 				"GET TEMPLATE: " + templateForDownload.getTemplateId() + " file: " + templateForDownload.getFileName());
