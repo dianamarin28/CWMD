@@ -17,6 +17,7 @@ import edu.ubb.cwmdEjb.dao.DaoException;
 import edu.ubb.cwmdEjb.dao.FlowDAO;
 import edu.ubb.cwmdEjb.model.ActiveFlow;
 import edu.ubb.cwmdEjb.model.Flow;
+import edu.ubb.cwmdEjbClient.dtos.ActiveFlowDTO;
 import edu.ubb.cwmdEjbClient.dtos.FlowDTO;
 import edu.ubb.cwmdEjbClient.interfaces.FlowBeanInterface;
 import edu.ubb.cwmdEjbClient.interfaces.RemoteException;
@@ -89,6 +90,18 @@ public class FlowBean implements Serializable, FlowBeanInterface {
 			return flowDTOlist;
 		} catch (DaoException e) {
 			logger.error("get all flows error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public FlowDTO findById(Long flowId) throws RemoteException {
+		FlowDTO flowDTO = new FlowDTO();
+		try {
+			flowDTO = flowAssembler.modelToDto(flowDAO.findById(flowId));
+			return flowDTO;
+		} catch (DaoException e) {
+			logger.error("Find flow by id error " + e);
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
