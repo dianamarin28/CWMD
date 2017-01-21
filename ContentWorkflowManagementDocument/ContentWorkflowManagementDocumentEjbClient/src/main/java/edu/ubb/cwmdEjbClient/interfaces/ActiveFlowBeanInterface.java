@@ -24,5 +24,7 @@ public interface ActiveFlowBeanInterface {
 	ActiveFlowDTO updateActiveFlow(ActiveFlowDTO activeFlowDTO) throws RemoteException;
 	
 	Long createActiveFlow(UserDTO usertDTO, FlowDTO flowDTO, String flowName) throws RemoteException;
+	
+//	void rejectActiveFlow(ActiveFlowDTO activeFlow) throws RemoteException;
 
 }

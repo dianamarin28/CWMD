@@ -161,5 +161,17 @@ public class ActiveFlowDAO {
 		}
 
 	}
+	
+	public void rejectActiveFlow(ActiveFlow activeFlow) throws DaoException{
+		try{
+			TypedQuery<ActiveFlow> query = entityManager
+					.createQuery("SELECT f.step FROM activeflow f WHERE f.id = :activeFlowId", ActiveFlow.class);
+			query.setParameter("activeFlowId", activeFlow.getId());
+			
+		}
+		catch(PersistenceException e){
+			throw new DaoException("Error", e);
+		}
+	}
 
 }

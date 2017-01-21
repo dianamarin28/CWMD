@@ -139,5 +139,12 @@ public class ActiveFlowBean implements Serializable, ActiveFlowBeanInterface {
 		}
 		return new Long(1);
 	}
+	
+//	@Override
+//	public void rejectActiveFlow(ActiveFlowDTO activeFlow) throws RemoteException{
+//		try{
+//			
+//		}
+//	}
 
 }

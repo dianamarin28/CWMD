@@ -2,7 +2,7 @@ package edu.ubb.cwmdEjbClient.dtos;
 
 import java.util.List;
 
-public class ActiveFlowDTO{
+public class ActiveFlowDTO {
 
 	private Long activeFlowId;
 

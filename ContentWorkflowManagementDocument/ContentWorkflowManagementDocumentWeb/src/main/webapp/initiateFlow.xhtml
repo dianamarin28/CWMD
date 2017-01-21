@@ -11,7 +11,7 @@
 	<ui:define name="content">
 		<h:form id="initiateFlow">
 			
-			<h:panelGrid columns="4">
+			<h:panelGrid columns="4" id="docAndView">
 				<p:outputLabel for="selectToView" value="Select documents" />
 				<p:selectOneMenu id="selectToView"
 					value="#{initiateFlowBean.chosenDocument}"
@@ -20,7 +20,7 @@
 						update="viewVersions" />
 					<f:selectItem itemLabel="Select a document" itemValue="#{null}"
 						noSelectionOption="true" />
-					<f:selectItems value="#{workingAreaBean.documents}" var="document"
+					<f:selectItems value="#{initiateFlowBean.documents}" var="document"
 						itemLabel="#{document.name}" itemValue="#{document}" />
 				</p:selectOneMenu>
 				
@@ -35,9 +35,9 @@
 							itemValue="#{version}" />
 					</p:selectOneMenu>
 					
-					<h:commandButton 
-						action="#{initiateFlowBean.addVersionInCurrentFlow}" value="Add document to flow">
-					</h:commandButton>
+					<p:commandButton 
+						action="#{initiateFlowBean.addVersionInCurrentFlow}" style="width:150px;height:50px" value="Add document to flow" process="@this,docAndView">
+					</p:commandButton>
 				
 				</h:panelGrid>
 			</h:panelGrid>
@@ -56,10 +56,10 @@
 				<p:outputLabel for="name" value="Flow name" />
 						<p:inputText id="name" value="#{initiateFlowBean.flowName}" />
 				
-				<h:commandButton value="Start flow"
-					action="#{initiateFlowBean.startFlow}">
-				</h:commandButton>
-							
+				<p:commandButton value="Start flow"
+					actionListener="#{initiateFlowBean.startFlow}" process="@this,viewTypesOfFlow">
+				</p:commandButton>
+				
 		</h:panelGrid>
 		
 		</h:form>
