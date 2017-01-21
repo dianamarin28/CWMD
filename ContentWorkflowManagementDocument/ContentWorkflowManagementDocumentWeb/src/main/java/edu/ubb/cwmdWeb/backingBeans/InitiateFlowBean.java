@@ -1,5 +1,5 @@
 package edu.ubb.cwmdWeb.backingBeans;
-import javax.faces.bean.RequestScoped;
+
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
 import edu.ubb.cwmdEjbClient.dtos.DocumentDTO;
@@ -25,7 +24,6 @@ import edu.ubb.cwmdEjbClient.interfaces.VersionBeanInterface;
 
 @ManagedBean
 @SessionScoped
-@RequestScoped
 public class InitiateFlowBean  implements Serializable{
 	private static final long serialVersionUID = -6123801107083963826L;
 	@EJB
@@ -129,12 +127,13 @@ public class InitiateFlowBean  implements Serializable{
 		return this.flowName;
 	}
 	
+	public List<DocumentDTO> getFinalDocumentsNotInActiveFlows(){
+		return documentBeanInterface.getFinalDocumentsNotInActiveFlows();
+	}
+	
 	public void startFlow(){
 		System.out.println("startFlow invoked");
 		Long activeFlowId = activeBeanInterface.createActiveFlow(userDTO, flowType, flowName);
 		versionBeanInterface.addActiveFlowIdToVersions(activeFlowId, versions);
-	    
 	  }
-	
-	
 }
