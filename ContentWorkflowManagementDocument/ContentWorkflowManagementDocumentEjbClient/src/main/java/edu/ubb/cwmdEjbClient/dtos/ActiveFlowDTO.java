@@ -1,8 +1,12 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ActiveFlowDTO {
+public class ActiveFlowDTO implements Serializable {
+
+
+	private static final long serialVersionUID = 6719749521602634097L;
 
 	private Long activeFlowId;
 

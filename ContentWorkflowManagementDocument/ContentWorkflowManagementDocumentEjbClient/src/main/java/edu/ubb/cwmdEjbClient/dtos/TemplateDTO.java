@@ -1,8 +1,11 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TemplateDTO {
+public class TemplateDTO implements Serializable{
+
+	private static final long serialVersionUID = 1271154826162715362L;
 
 	private Long templateId;
 

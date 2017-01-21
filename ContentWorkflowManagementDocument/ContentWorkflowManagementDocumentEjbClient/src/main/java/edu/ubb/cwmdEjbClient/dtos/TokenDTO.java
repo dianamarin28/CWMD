@@ -1,8 +1,12 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class TokenDTO {
+public class TokenDTO implements Serializable{
+
+
+	private static final long serialVersionUID = -6623637465344026067L;
 
 	private Long tokenId;
 

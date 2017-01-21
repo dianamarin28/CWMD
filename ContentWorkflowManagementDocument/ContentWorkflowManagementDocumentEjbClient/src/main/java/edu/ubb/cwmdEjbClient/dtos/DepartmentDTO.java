@@ -1,8 +1,11 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DepartmentDTO {
+public class DepartmentDTO implements Serializable{
+	
+	private static final long serialVersionUID = -2134651262287284161L;
 
 	private Long departmentId;
 

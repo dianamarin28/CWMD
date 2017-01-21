@@ -1,6 +1,10 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
-public class VersionDTO {
+import java.io.Serializable;
+
+public class VersionDTO implements Serializable{
+
+	private static final long serialVersionUID = 3712786982348286056L;
 
 	private Long versionId;
 

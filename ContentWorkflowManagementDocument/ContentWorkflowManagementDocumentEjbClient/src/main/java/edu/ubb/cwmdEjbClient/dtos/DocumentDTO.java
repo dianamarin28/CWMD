@@ -1,9 +1,13 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class DocumentDTO {
+public class DocumentDTO implements Serializable{
+
+
+	private static final long serialVersionUID = 1202015588442652893L;
 
 	private Long documentId;
 

@@ -1,8 +1,11 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FunctionDTO {
+public class FunctionDTO implements Serializable{
+
+	private static final long serialVersionUID = 7214807340554507296L;
 
 	private Long functionId;
 

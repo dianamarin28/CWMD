@@ -1,8 +1,11 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class LogDTO {
+public class LogDTO implements Serializable{
+	
+	private static final long serialVersionUID = -8806765826137654350L;
 
 	private Long logId;
 

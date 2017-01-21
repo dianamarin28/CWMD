@@ -1,8 +1,11 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UserDTO {
+public class UserDTO implements Serializable{
+
+	private static final long serialVersionUID = -7180542048438197857L;
 
 	private Long userId;
 
