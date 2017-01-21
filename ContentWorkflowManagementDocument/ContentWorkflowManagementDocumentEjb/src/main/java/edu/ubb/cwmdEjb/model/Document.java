@@ -12,8 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
+
 @Entity
 @Table(name = "document")
+@Cache(type = CacheType.NONE)
 public class Document extends BaseEntity {
 
 	private static final long serialVersionUID = -1890325912962553432L;

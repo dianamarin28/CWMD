@@ -16,7 +16,7 @@ public class Log extends BaseEntity {
 
 	private static final long serialVersionUID = -7402343709130286199L;
 
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "userId", nullable = true)
 	@ManyToOne
 	private User user;
 

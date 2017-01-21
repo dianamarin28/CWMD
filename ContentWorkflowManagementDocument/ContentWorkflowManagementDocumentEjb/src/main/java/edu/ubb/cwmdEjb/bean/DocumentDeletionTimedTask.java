@@ -20,8 +20,11 @@ import javax.ejb.TimerService;
 
 import edu.ubb.cwmdEjb.dao.DaoException;
 import edu.ubb.cwmdEjb.dao.DocumentDAO;
+import edu.ubb.cwmdEjb.dao.LogDAO;
 import edu.ubb.cwmdEjb.dao.VersionDAO;
 import edu.ubb.cwmdEjb.model.Document;
+import edu.ubb.cwmdEjb.model.Log;
+import edu.ubb.cwmdEjb.model.LogActionType;
 import edu.ubb.cwmdEjb.model.Version;
 import edu.ubb.cwmdEjb.util.EmailHelper;
 
@@ -48,6 +51,9 @@ public class DocumentDeletionTimedTask {
 
 	@EJB
 	private VersionDAO versionDao;
+
+	@EJB
+	private LogDAO logDao;
 
 	@Resource
 	private TimerService timerService;
@@ -77,7 +83,6 @@ public class DocumentDeletionTimedTask {
 
 	@Timeout
 	public void processFlights(Timer timer) {
-		logger.info("Bello");
 		deleteDocuments();
 		removeFromDeletion();
 		scheduleForDeletion();
@@ -92,6 +97,19 @@ public class DocumentDeletionTimedTask {
 					try {
 						logger.info("Document " + doc.getName() + " was removed from deletion schedule");
 						documentDao.updateDocument(doc);
+						// send the email
+						String message = "Dear " + doc.getAuthor().getUserName() + ",\n\n"
+								+ "Your document with the title " + doc.getName()
+								+ " has been removed from deletion schedule because you have modified it.\n";
+						String subject = "Remove document from deletion schedule";
+						EmailHelper.sendEmail(doc.getAuthor().getEmail(), subject, message);
+
+						// insert in the log table
+						Log log = new Log();
+						log.setDate(LocalDate.now());
+						log.setLogActionType(LogActionType.SYSTEM_REMOVE_DOCUMENT_FROM_DELETION_SCHEDULE);
+						log.setUser(null);
+						logDao.insertLog(log);
 					} catch (DaoException e) {
 						logger.info("Could not delete document " + doc.getId());
 					}
@@ -103,18 +121,24 @@ public class DocumentDeletionTimedTask {
 	public void scheduleForDeletion() {
 		List<Document> documents = documentDao.getAllDocuments();
 		for (Document doc : documents) {
-			logger.info("Schedule: " + doc.getLastModficationDate());
-			if (Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), doc.getLastModficationDate())) >= 30) {
+			if (doc.getDeletionDate() == null
+					&& Math.abs(ChronoUnit.DAYS.between(LocalDate.now(), doc.getLastModficationDate())) >= 30) {
 				doc.setDeletionDate(LocalDate.now().plusDays(30L));
-				logger.info("Deletion date: " + doc.getDeletionDate());
 				try {
-					logger.info("Document " + doc.getName() + " was sscheduled for deletion");
+					logger.info("Document " + doc.getName() + " was scheduled for deletion");
 					documentDao.updateDocument(doc);
 					// send the email
 					String message = "Dear " + doc.getAuthor().getUserName() + ",\n\n" + "Your document with the title "
 							+ doc.getName() + " has been scheduled for deletion in 30 days time.\n";
 					String subject = "Schedule document deletion";
 					EmailHelper.sendEmail(doc.getAuthor().getEmail(), subject, message);
+
+					// insert in the log table
+					Log log = new Log();
+					log.setDate(LocalDate.now());
+					log.setLogActionType(LogActionType.SYSTEM_SCHEDULE_DOCUMENT_DELETION);
+					log.setUser(null);
+					logDao.insertLog(log);
 				} catch (DaoException e) {
 					logger.info("Could not scheedule the document " + doc.getId() + " for deletion");
 				}
@@ -125,13 +149,9 @@ public class DocumentDeletionTimedTask {
 
 	public void deleteDocuments() {
 		List<Document> documents = documentDao.getAllDocuments();
-		logger.info("bla delete");
 		for (Document doc : documents) {
-			logger.info(doc.getId() + " " + doc.getDeletionDate());
 			if (doc.getDeletionDate() != null) {
-				logger.info("not null");
 				if (LocalDate.now().isEqual(doc.getDeletionDate())) {
-					logger.info("try");
 					try {
 						// prepare the data needed for the email
 						String message = "Dear " + doc.getAuthor().getUserName() + ",\n\n"
@@ -149,6 +169,13 @@ public class DocumentDeletionTimedTask {
 
 						// send the email
 						EmailHelper.sendEmail(authorEmail, subject, message);
+
+						//// insert in the log table
+						Log log = new Log();
+						log.setDate(LocalDate.now());
+						log.setLogActionType(LogActionType.SYSTEM_DELETE_DOCUMENT);
+						log.setUser(null);
+						logDao.insertLog(log);
 					} catch (DaoException e) {
 						logger.info("Could not delete the document " + doc.getId());
 					}
