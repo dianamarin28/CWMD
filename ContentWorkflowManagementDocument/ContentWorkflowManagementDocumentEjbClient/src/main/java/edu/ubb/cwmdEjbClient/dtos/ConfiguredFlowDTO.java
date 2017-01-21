@@ -1,7 +1,5 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
-import javax.faces.flow.Flow;
-
 public class ConfiguredFlowDTO{
 	
 	private Long configuredFlowId;

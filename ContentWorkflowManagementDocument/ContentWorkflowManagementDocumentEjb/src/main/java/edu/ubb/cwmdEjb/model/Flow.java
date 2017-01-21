@@ -31,9 +31,8 @@ public class Flow extends BaseEntity {
 	@Column(name = "noOfParticipants", nullable = false)
 	private int noOfParticipants;
 
-	@JoinColumn(name = "configuredFlowId")
-	@OneToOne
-	private ConfiguredFlow configuredFlow;
+	@OneToMany(mappedBy = "flow")
+	private List<ConfiguredFlow> configuredFlows;
 	
 	// @ManyToMany(mappedBy = "flows")
 	// private List<Function> functions;
@@ -59,14 +58,15 @@ public class Flow extends BaseEntity {
 		this.name = name;
 	}
 
-	public ConfiguredFlow getConfiguredFlow() {
-		return configuredFlow;
+	
+	public List<ConfiguredFlow> getConfiguredFlows() {
+		return configuredFlows;
 	}
 
-	public void setConfiguredFlow(ConfiguredFlow configuredFlow) {
-		this.configuredFlow = configuredFlow;
+	public void setConfiguredFlows(List<ConfiguredFlow> configuredFlows) {
+		this.configuredFlows = configuredFlows;
 	}
-	
+
 	public List<ActiveFlow> getActiveFlows() {
 		return activeFlows;
 	}
