@@ -152,5 +152,17 @@ public class VersionDAO {
 			throw new DaoException("Version update failed", e);
 		}
 	}
+	
+	public void addActiveFlowIdToVersion(Version version, Long activeFlowId) throws DaoException{
+		try{
+			TypedQuery<Version> query = entityManager.createQuery(
+					"UPDATE VERSION  v SET activeFlowId = :activeFlowId where v.id = :versionId", Version.class);
+			query.setParameter("activeFlowId", activeFlowId);
+			query.setParameter("versionId", version.getId());
+		}catch (PersistenceException e) {
+			logger.error("Add active flow id to version error", e);
+			throw new DaoException("Add active flow id to version error", e);
+		}
+	}
 
 }

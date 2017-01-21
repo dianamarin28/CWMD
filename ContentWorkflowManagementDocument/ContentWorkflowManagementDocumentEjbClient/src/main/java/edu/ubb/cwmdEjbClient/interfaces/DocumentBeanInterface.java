@@ -22,5 +22,6 @@ public interface DocumentBeanInterface {
 	DocumentDTO updateDocument(DocumentDTO documentDTO) throws RemoteException;
 
 	void deleteDocument(DocumentDTO documentDTO) throws RemoteException;
-
+	
+	List<DocumentDTO> getFinalDocumentsNotInActiveFlows() throws RemoteException;
 }

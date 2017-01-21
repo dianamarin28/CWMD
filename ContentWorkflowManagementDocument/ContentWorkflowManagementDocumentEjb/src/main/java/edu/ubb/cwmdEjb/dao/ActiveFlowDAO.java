@@ -1,6 +1,7 @@
 package edu.ubb.cwmdEjb.dao;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -17,6 +18,7 @@ import edu.ubb.cwmdEjb.model.ActiveFlow;
 import edu.ubb.cwmdEjb.model.ActiveFlowStatus;
 import edu.ubb.cwmdEjb.model.Department;
 import edu.ubb.cwmdEjb.model.User;
+import edu.ubb.cwmdEjb.model.Flow;
 
 @Stateless(name = "ActiveFlowDAO", mappedName = "ejb/ActiveFlowDAO")
 public class ActiveFlowDAO {
@@ -29,6 +31,26 @@ public class ActiveFlowDAO {
 	@EJB
 	private UserDAO userDao;
 
+	public Long createActiveFlow(User user, Flow flow, String flowName) throws DaoException{
+		System.out.println("User id, flowId: " + user.getId() + flow.getId());
+		try{
+			ActiveFlow newFlow = new ActiveFlow();
+			flow.setName(flowName);
+			newFlow.setUser(user);
+			newFlow.setFlow(flow);
+			newFlow.setStatus(ActiveFlowStatus.ACTIVE);
+			newFlow.setStep("P2");
+			
+			entityManager.persist(newFlow);
+			entityManager.flush();
+		}
+		catch(PersistenceException e){
+			logger.error("Create new active flow error", e);
+			throw new DaoException("Create new active flow error", e);
+		}
+		return new Long(1);
+	}
+	
 	public ActiveFlow findById(Long activeFlowId) throws DaoException {
 		try {
 			ActiveFlow activeFlow = entityManager.find(ActiveFlow.class, activeFlowId);

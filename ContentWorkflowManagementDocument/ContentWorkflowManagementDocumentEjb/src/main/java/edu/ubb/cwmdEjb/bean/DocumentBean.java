@@ -129,4 +129,21 @@ public class DocumentBean implements Serializable, DocumentBeanInterface {
 
 	}
 
+	@Override
+	public List<DocumentDTO> getFinalDocumentsNotInActiveFlows() throws RemoteException {
+		List<DocumentDTO> documentsDTO = new ArrayList<>();
+		try{
+			List<Document> documents = documentDAO.getFinalDocumentsNotInActiveFlows();
+			for(Document d : documents){
+				DocumentDTO documentDTO = documentAssembler.modelToDtoSimple(d);
+				documentsDTO.add(documentDTO);
+			}
+			return documentsDTO;
+		}
+		catch(DaoException e){
+			logger.error("Get final documents not in active flows error: " +e );
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
 }

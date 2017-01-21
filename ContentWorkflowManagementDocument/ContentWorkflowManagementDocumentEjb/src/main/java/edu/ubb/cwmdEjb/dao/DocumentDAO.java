@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import edu.ubb.cwmdEjb.model.Department;
 import edu.ubb.cwmdEjb.model.Document;
 import edu.ubb.cwmdEjb.model.User;
+import edu.ubb.cwmdEjb.model.VersionStatus;
 
 @Stateless(name = "DocumentDAO", mappedName = "ejb/DocumentDAO")
 public class DocumentDAO {
@@ -162,6 +163,22 @@ public class DocumentDAO {
 		} catch (PersistenceException e) {
 			logger.error("Document retrieval by template id failed", e);
 			throw new DaoException("Document retrieval by and template id failed", e);
+		}
+	}
+	
+	public List<Document> getFinalDocumentsNotInActiveFlows() throws DaoException{
+		try{
+			TypedQuery<Document> query = entityManager
+					
+					.createQuery("SELECT d FROM Document d JOIN d.version v WHERE v.document.id = d.id AND v.status = :final and v.activeFlowId IS NULL", Document.class);
+			
+			query.setParameter("final", VersionStatus.FINAL);
+			List<Document> documents = query.getResultList();
+			return documents;
+		}
+		catch(PersistenceException e){
+			logger.error("Get final documents not in active flows failed", e);
+			throw new DaoException("Get final documents not in active flows failed", e);
 		}
 	}
 	

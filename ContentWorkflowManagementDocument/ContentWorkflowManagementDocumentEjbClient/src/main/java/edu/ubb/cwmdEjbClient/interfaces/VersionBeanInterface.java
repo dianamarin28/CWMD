@@ -24,5 +24,7 @@ public interface VersionBeanInterface {
 	List<VersionDTO> getAllVersionsFromActiveFlow(Long activeFlowId) throws RemoteException;
 
 	VersionDTO updateVersion(VersionDTO versionDTO) throws RemoteException;
+	
+	void addActiveFlowIdToVersions(Long activeFlowId, List<VersionDTO> versions) throws RemoteException;
 
 }

@@ -11,8 +11,7 @@
 	<ui:define name="content">
 		<h:form id="initiateFlow">
 			
-
-			<h:panelGrid columns="3">
+			<h:panelGrid columns="4">
 				<p:outputLabel for="selectToView" value="Select documents" />
 				<p:selectOneMenu id="selectToView"
 					value="#{initiateFlowBean.chosenDocument}"
@@ -24,40 +23,45 @@
 					<f:selectItems value="#{workingAreaBean.documents}" var="document"
 						itemLabel="#{document.name}" itemValue="#{document}" />
 				</p:selectOneMenu>
+				
+				<h:panelGrid columns="3" id="viewVersions">
+					<p:outputLabel for="versionsOfDoc" value="Select a version" />
+					<p:selectOneMenu id="versionsOfDoc"
+						value="#{initiateFlowBean.chosenVersion}" converter="versionConverter">
+						<f:selectItem itemLabel="Select a version" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{initiateFlowBean.versionsOfDocument}"
+							var="version" itemLabel="v#{version.number} - #{version.fileName}"
+							itemValue="#{version}" />
+					</p:selectOneMenu>
+					
+					<h:commandButton 
+						action="#{initiateFlowBean.addVersionInCurrentFlow}" value="Add document to flow">
+					</h:commandButton>
+				
+				</h:panelGrid>
 			</h:panelGrid>
-
-			<h:panelGrid columns="1" id="viewVersions">
-				<p:outputLabel for="versionsOfDoc" value="Select a version" />
-				<p:selectOneMenu id="versionsOfDoc"
-					value="#{initiateFlowBean.chosenVersion}" converter="versionConverter">
-					<f:selectItem itemLabel="Select a version" itemValue="#{null}"
-						noSelectionOption="true" />
-					<f:selectItems value="#{initiateFlowBean.versionsOfDocument}"
-						var="version" itemLabel="v#{version.number} - #{version.fileName}"
-						itemValue="#{version}" />
-				</p:selectOneMenu>
-
-			</h:panelGrid>
-
-			<p:commandButton 
-					actionListener="#{initiateFlowBean.addVersionInCurrentFlow}" value="Add document to flow">
-			</p:commandButton>
 			
-			
-		<h:panelGrid columns="1" id="viewTypesOfFlow">
+		<h:panelGrid columns="2" id="viewTypesOfFlow">
 				<p:outputLabel for="flowType" value="Select flow type" />
 				<p:selectOneMenu id="flowType"
 					value="#{initiateFlowBean.flowType}" converter="flowConverter">
 					<f:selectItem itemLabel="Select a type" itemValue="#{null}"
 						noSelectionOption="true" />
 					<f:selectItems value="#{initiateFlowBean.flows}"
-						var="flow" itemLabel="v#{flow.name}"
+						var="flow" itemLabel="#{flow.name}"
 						itemValue="#{flow}" />
 				</p:selectOneMenu>
-			</h:panelGrid>
-		<p:commandButton 
-					actionListener="#{initiateFlowBean.startFlow}" value="Start flow">
-			</p:commandButton>
+				
+				<p:outputLabel for="name" value="Flow name" />
+						<p:inputText id="name" value="#{initiateFlowBean.flowName}" />
+				
+				<h:commandButton value="Start flow"
+					action="#{initiateFlowBean.startFlow}">
+				</h:commandButton>
+				
+		</h:panelGrid>
+		
 		</h:form>
 
 	</ui:define>
