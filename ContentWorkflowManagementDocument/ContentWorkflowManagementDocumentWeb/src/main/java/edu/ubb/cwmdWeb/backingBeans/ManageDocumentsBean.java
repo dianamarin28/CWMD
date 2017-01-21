@@ -131,10 +131,10 @@ public class ManageDocumentsBean implements Serializable {
 		} else if (versionDTO == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "A file has to be uploaded"));
-		} else if(template == null) {
+		} else if (template == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Template can not be null"));
-		}else if (name == null || name.equals("")) {
+		} else if (name == null || name.equals("")) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Name cannot be empty"));
 		} else if (docAbstract == null || docAbstract.equals("")) {
@@ -301,8 +301,6 @@ public class ManageDocumentsBean implements Serializable {
 	public boolean checkIfAnyVersionInActiveFlow(DocumentDTO documentDTO) {
 		List<VersionDTO> versionDTOs = versionBeanInterface.getAllVersionsOfDocument(documentDTO.getDocumentId());
 		for (VersionDTO versionDTO : versionDTOs) {
-			System.out
-					.println("DELETE DOC: " + versionDTO.getVersionId() + " active flow " + versionDTO.getActiveFlow());
 			if (versionDTO.getActiveFlow() != null) {
 				return true;
 			}
@@ -517,7 +515,7 @@ public class ManageDocumentsBean implements Serializable {
 	}
 
 	public StreamedContent getTemplateForDownloadFile() {
-		if(templateForDownload == null) {
+		if (templateForDownload == null) {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Template can not be null."));
 			return null;
