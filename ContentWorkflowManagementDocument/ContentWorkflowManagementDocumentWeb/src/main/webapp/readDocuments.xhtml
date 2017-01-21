@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="workingAreaForm">
+			<p:growl id="msgs" showDetail="true" />
+
+			<h:panelGrid columns="2">
+				<p:outputLabel for="selectToView" value="Select document" />
+				<p:selectOneMenu id="selectToView"
+					value="#{readDocumentsBean.viewDocument}"
+					converter="documentConverter">
+					<p:ajax listener="#{readDocumentsBean.setViewValues}"
+						update="viewDoc" />
+					<f:selectItem itemLabel="Select a document" itemValue="#{null}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{readDocumentsBean.documents}" var="document"
+						itemLabel="#{document.name}" itemValue="#{document}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" id="viewDoc">
+				<p:outputLabel for="docAbstractView" value="Abstract" />
+				<p:outputLabel id="docAbstractView"
+					value="#{readDocumentsBean.viewDocAbstract}" rows="5" cols="30" />
+
+				<p:outputLabel for="keyWordsView" value="Key Words" />
+				<p:outputLabel id="keyWordsView"
+					value="#{readDocumentsBean.viewKeyWords}" rows="5" cols="30" />
+
+
+				<p:outputLabel for="versionsOfDoc" value="Select version" />
+				<p:selectOneMenu id="versionsOfDoc"
+					value="#{readDocumentsBean.viewVersion}" converter="versionConverter">
+					<f:selectItem itemLabel="Select a version" itemValue="#{null}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{readDocumentsBean.viewVersions}"
+						var="version" itemLabel="v#{version.number} - #{version.fileName}"
+						itemValue="#{version}" />
+				</p:selectOneMenu>
+
+				<p:commandLink id="viewVersion" value="View"
+					update=":mainForm:workingAreaForm:viewFileDetail"
+					oncomplete="PF('viewFileDialog').show()" />
+
+				<p:commandButton id="downloadVersion" value="Download"
+					onclick="PrimeFaces.monitorDownload(start, stop);"
+					icon="ui-icon-arrowthick-1-s">
+					<p:fileDownload value="#{readDocumentsBean.downloadFile}" />
+				</p:commandButton>
+			</h:panelGrid>
+
+
+			<p:dialog header="View File" widgetVar="viewFileDialog"
+				showEffect="blind" hideEffect="explode" resizable="true"
+				height="500" width="750">
+				<p:outputPanel id="viewFileDetail">
+					<p:media value="#{readDocumentsBean.viewFile}" width="700"
+						height="450" player="pdf" />
+				</p:outputPanel>
+			</p:dialog>
+
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

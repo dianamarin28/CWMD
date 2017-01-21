@@ -77,6 +77,21 @@ public class DocumentBean implements Serializable, DocumentBeanInterface {
 			throw new RemoteException(e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public List<DocumentDTO> getAllDocuments() throws RemoteException {
+		try {
+			List<DocumentDTO> documentDTOs = new ArrayList<>();
+			List<Document> documents = documentDAO.getAllDocuments();
+			for (Document doc : documents) {
+				documentDTOs.add(documentAssembler.modelToDtoSimple(doc));
+			}
+			return documentDTOs;
+		} catch (DaoException e) {
+			logger.error("Get by document user id error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
 
 	@Override
 	public List<DocumentDTO> getDocumentsForAdministrator(Long userId) throws RemoteException {

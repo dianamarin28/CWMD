@@ -14,6 +14,8 @@ public interface DocumentBeanInterface {
 	DocumentDTO getByNameAndUserId(String documentName, Long userId) throws RemoteException;
 
 	List<DocumentDTO> getDocumentsForUserID(Long userId) throws RemoteException;
+	
+	List<DocumentDTO> getAllDocuments() throws RemoteException;
 
 	List<DocumentDTO> getDocumentsForAdministrator(Long userId) throws RemoteException;
 
