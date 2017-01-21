@@ -17,9 +17,10 @@
 				<p:tab title="Add document" id="insertTab">
 					<p:fileUpload
 						fileUploadListener="#{manageDocumentsBean.handleFileUpload}"
-						mode="advanced" dragDropSupport="false"
+						mode="advanced" dragDropSupport="false" sizeLimit="100000"
 						update="#{p:component('msgs')}" auto="true" fileLimit="1"
-						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
+						allowTypes="/(\.|\/)(xls|xlsx|doc|docx|pdf)$/"
+						label="Choose a document" />
 
 					<h:panelGrid columns="2">
 						<p:outputLabel for="name" value="Name" />
@@ -44,8 +45,9 @@
 					</h:panelGrid>
 
 					<h:commandButton value="Insert"
-						action="#{manageDocumentsBean.insertDocument}" execute="@this,insertTab">
-						</h:commandButton>
+						action="#{manageDocumentsBean.insertDocument}"
+						execute="@this,insertTab">
+					</h:commandButton>
 
 				</p:tab>
 				<p:tab title="Update document" id="updateTab">
@@ -56,7 +58,7 @@
 							converter="documentConverter">
 							<p:ajax listener="#{manageDocumentsBean.setUpdateValues}"
 								update="updateDoc" />
-							
+
 							<f:selectItems value="#{manageDocumentsBean.documents}"
 								var="document" itemLabel="#{document.name}"
 								itemValue="#{document}" />
@@ -65,9 +67,10 @@
 
 					<p:fileUpload
 						fileUploadListener="#{manageDocumentsBean.handleFileUpdate}"
-						mode="advanced" dragDropSupport="false"
+						mode="advanced" dragDropSupport="false" sizeLimit="100000"
 						update="#{p:component('msgs')}" auto="true" fileLimit="1"
-						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
+						allowTypes="/(\.|\/)(xls|xlsx|doc|docx|pdf)$/"
+						label="Choose a document" />
 
 					<h:panelGrid columns="2" id="updateDoc">
 						<p:outputLabel for="updateStatus" value="Select status" />
@@ -148,7 +151,7 @@
 							converter="documentConverter">
 							<p:ajax listener="#{manageDocumentsBean.setVersionsTableValues}"
 								update="versionsTable" />
-							
+
 							<f:selectItems value="#{manageDocumentsBean.documents}"
 								var="document" itemLabel="#{document.name}"
 								itemValue="#{document}" />

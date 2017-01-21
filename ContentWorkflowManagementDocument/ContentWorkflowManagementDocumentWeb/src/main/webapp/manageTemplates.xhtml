@@ -22,9 +22,10 @@
 
 					<p:fileUpload
 						fileUploadListener="#{manageTemplatesBean.handleFileUpload}"
-						mode="advanced" dragDropSupport="false"
+						mode="advanced" dragDropSupport="false" sizeLimit="100000"
 						update="#{p:component('msgs')}" auto="true" fileLimit="1"
-						allowTypes="/(\.|\/)(xls?x|doc?x|pdf)$/" label="Choose a document" />
+						allowTypes="/(\.|\/)(xls|xlsx|doc|docx|pdf)$/"
+						label="Choose a document" />
 
 					<h:commandButton value="Insert"
 						action="#{manageTemplatesBean.insertTemplate}"

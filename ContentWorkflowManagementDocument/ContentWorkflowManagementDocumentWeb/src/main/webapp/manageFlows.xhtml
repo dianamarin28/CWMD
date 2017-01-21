@@ -32,7 +32,9 @@
 			<br />
 			<br />
 
-			<p:dataTable id="flows" value="#{manageFlowsBean.flows}" var="flow"
+			<p:dataTable paginator="true" rows="7"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				id="flows" value="#{manageFlowsBean.flows}" var="flow"
 				editable="true">
 				<f:facet name="header">
 					<h:outputText value="Flows Table"></h:outputText>
@@ -41,11 +43,11 @@
 				<p:column headerText="Name">
 					<h:outputText value="#{flow.name}" />
 				</p:column>
-				
+
 				<p:column headerText="Number of participants">
 					<h:outputText value="#{flow.noOfParticipants}" />
 				</p:column>
-				
+
 				<p:column style="width:40px">
 					<p:column>
 						<p:commandButton icon="ui-icon-trash" process="@this,flows"
