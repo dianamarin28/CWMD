@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import edu.ubb.cwmdEjb.model.ActiveFlow;
 import edu.ubb.cwmdEjb.model.ActiveFlowStatus;
 import edu.ubb.cwmdEjb.model.Department;
+import edu.ubb.cwmdEjb.model.Document;
 import edu.ubb.cwmdEjb.model.User;
 import edu.ubb.cwmdEjb.model.Flow;
 
@@ -31,26 +32,25 @@ public class ActiveFlowDAO {
 	@EJB
 	private UserDAO userDao;
 
-	public Long createActiveFlow(User user, Flow flow, String flowName) throws DaoException{
+	public Long createActiveFlow(User user, Flow flow, String flowName) throws DaoException {
 		System.out.println("User id, flowId: " + user.getId() + flow.getId());
-		try{
+		try {
 			ActiveFlow newFlow = new ActiveFlow();
 			flow.setName(flowName);
 			newFlow.setUser(user);
 			newFlow.setFlow(flow);
 			newFlow.setStatus(ActiveFlowStatus.ACTIVE);
 			newFlow.setStep("P2");
-			
+
 			entityManager.persist(newFlow);
 			entityManager.flush();
-		}
-		catch(PersistenceException e){
+		} catch (PersistenceException e) {
 			logger.error("Create new active flow error", e);
 			throw new DaoException("Create new active flow error", e);
 		}
 		return new Long(1);
 	}
-	
+
 	public ActiveFlow findById(Long activeFlowId) throws DaoException {
 		try {
 			ActiveFlow activeFlow = entityManager.find(ActiveFlow.class, activeFlowId);
@@ -160,6 +160,16 @@ public class ActiveFlowDAO {
 			throw new DaoException("Active flows retrieval by and flow id failed", e);
 		}
 
+	}
+
+	public void insertActiveFlow(ActiveFlow activeFlow) throws DaoException {
+		try {
+			entityManager.persist(activeFlow);
+			entityManager.flush();
+		} catch (PersistenceException e) {
+			logger.error("Active flow insertion failed", e);
+			throw new DaoException("Active flow insertion failed", e);
+		}
 	}
 
 }

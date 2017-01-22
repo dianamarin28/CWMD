@@ -10,58 +10,128 @@
 
 	<ui:define name="content">
 		<h:form id="initiateFlow">
-			
-			<h:panelGrid columns="4">
-				<p:outputLabel for="selectToView" value="Select documents" />
-				<p:selectOneMenu id="selectToView"
-					value="#{initiateFlowBean.chosenDocument}"
-					converter="documentConverter">
-					<p:ajax listener="#{initiateFlowBean.setDocumentVersions}"
-						update="viewVersions" />
-					<f:selectItem itemLabel="Select a document" itemValue="#{null}"
-						noSelectionOption="true" />
-					<f:selectItems value="#{workingAreaBean.documents}" var="document"
-						itemLabel="#{document.name}" itemValue="#{document}" />
-				</p:selectOneMenu>
-				
-				<h:panelGrid columns="3" id="viewVersions">
-					<p:outputLabel for="versionsOfDoc" value="Select a version" />
-					<p:selectOneMenu id="versionsOfDoc"
-						value="#{initiateFlowBean.chosenVersion}" converter="versionConverter">
-						<f:selectItem itemLabel="Select a version" itemValue="#{null}"
-							noSelectionOption="true" />
-						<f:selectItems value="#{initiateFlowBean.versionsOfDocument}"
-							var="version" itemLabel="v#{version.number} - #{version.fileName}"
-							itemValue="#{version}" />
-					</p:selectOneMenu>
-					
-					<h:commandButton 
-						action="#{initiateFlowBean.addVersionInCurrentFlow}" value="Add document to flow">
-					</h:commandButton>
-				
-				</h:panelGrid>
-			</h:panelGrid>
-			
-		<h:panelGrid columns="2" id="viewTypesOfFlow">
-				<p:outputLabel for="flowType" value="Select flow type" />
-				<p:selectOneMenu id="flowType"
-					value="#{initiateFlowBean.flowType}" converter="flowConverter">
-					<f:selectItem itemLabel="Select a type" itemValue="#{null}"
-						noSelectionOption="true" />
-					<f:selectItems value="#{initiateFlowBean.flows}"
-						var="flow" itemLabel="#{flow.name}"
-						itemValue="#{flow}" />
-				</p:selectOneMenu>
-				
-				<p:outputLabel for="name" value="Flow name" />
-						<p:inputText id="name" value="#{initiateFlowBean.flowName}" />
-				
-				<h:commandButton value="Start flow"
-					action="#{initiateFlowBean.startFlow}">
-				</h:commandButton>
-				
-		</h:panelGrid>
-		
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:wizard flowListener="#{initiateFlowBean.onFlowProcess}">
+				<p:tab id="data" title="General Data">
+					<p:panel header="Name and flow">
+						<p:messages />
+						<h:panelGrid columns="2" columnClasses="label, value">
+							<h:outputText value="Name: *" />
+							<p:inputText value="#{initiateFlowBean.name}" required="true"
+								label="Name" />
+
+							<h:outputText value="Flow: *" />
+							<p:selectOneMenu id="flow" value="#{initiateFlowBean.flow}"
+								converter="flowConverter">
+								<f:selectItems value="#{initiateFlowBean.flowDTOs}" var="flow"
+									itemLabel="#{flow.name}" itemValue="#{flow}" />
+								<p:ajax event="change"
+									listener="#{initiateFlowBean.configureFunctions}"></p:ajax>
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="versions" title="Documents">
+					<p:panel header="Choose documents">
+						<p:messages />
+						<h:panelGrid columns="2" columnClasses="label, value">
+							<h:outputText value="Document " />
+							<p:selectOneMenu id="document"
+								value="#{initiateFlowBean.document}"
+								converter="documentConverter">
+								<f:selectItems value="#{initiateFlowBean.documents}"
+									var="document" itemLabel="#{document.name}"
+									itemValue="#{document}" />
+								<p:ajax event="change"
+									listener="#{initiateFlowBean.valuesForDualList}"
+									update="#{p:component('pickVersions')}"></p:ajax>
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+						<p:outputLabel for="pickVersions"
+							value="Please select the version of the document you wish to add to the flow" />
+						<p:pickList id="pickVersions"
+							value="#{initiateFlowBean.dualListVersion}" var="version"
+							itemLabel="#{version.fileName}" itemValue="#{version}"
+							converter="versionConverter" />
+
+						<p:commandButton value="Add to selected versions"
+							actionListener="#{initiateFlowBean.addToSelectedVersion}"
+							update="#{p:component('selectedList')}" process="@this,versions"></p:commandButton>
+
+						<p:dataList id="selectedList"
+							value="#{initiateFlowBean.selectedVersions}" var="version"
+							type="ordered">
+							<f:facet name="header">Selected versions</f:facet>
+							<h:outputText value="#{version.number}, #{version.fileName}" />
+						</p:dataList>
+
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="function" title="Users">
+					<p:panel header="Select users">
+						<p:messages />
+
+						<p:dataList id="selectedUsers"
+							value="#{initiateFlowBean.requiredFunctions}" var="function"
+							type="ordered">
+							<f:facet name="header">Required functions for this flow</f:facet>
+							<h:outputText value="#{function.type}" />
+						</p:dataList>
+						<br />
+						<p:outputLabel for="pickUsers"
+							value="Please select the users that you want to add as participants to the flow" />
+						<p:pickList id="pickUsers"
+							value="#{initiateFlowBean.dualListUsersFromDepartment}"
+							var="user" itemLabel="#{user.userName} - #{user.function.type}"
+							itemValue="#{user}" converter="userConverter" />
+
+						<p:commandButton value="Submit"
+							actionListener="#{initiateFlowBean.submitUsers}"
+							update="#{p:component('msgs')}">
+						</p:commandButton>
+
+					</p:panel>
+				</p:tab>
+
+				<p:tab id="confirmation" title="Confirmation">
+					<p:panel header="Confirmation">
+						<p:messages />
+
+						<h:panelGrid columns="2">
+							<h:outputText value="Name: " />
+							<h:outputText value="#{initiateFlowBean.name}" />
+
+							<h:outputText value="Flow name: " />
+							<h:outputText value="#{initiateFlowBean.flow.name}" />
+						</h:panelGrid>
+
+						<p:dataList id="confirmDocs"
+							value="#{initiateFlowBean.selectedVersions}" var="version"
+							type="ordered">
+							<f:facet name="header">Selected versions of documents</f:facet>
+							<h:outputText value="#{version.number}, #{version.fileName}" />
+						</p:dataList>
+
+						<p:dataList id="confirmUsers"
+							value="#{initiateFlowBean.listSelectedUsers}" var="user"
+							type="ordered">
+							<f:facet name="header">Selected users</f:facet>
+							<h:outputText value="#{user.userName} - #{user.function.type}" />
+						</p:dataList>
+
+						<h:commandButton value="Start Flow"
+							action="#{initiateFlowBean.startFlow}"
+							update="#{p:component('msgs')}">
+						</h:commandButton>
+
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
 		</h:form>
 
 	</ui:define>

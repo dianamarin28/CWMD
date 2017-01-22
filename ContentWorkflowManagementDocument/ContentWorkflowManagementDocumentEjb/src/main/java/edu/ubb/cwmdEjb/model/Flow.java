@@ -8,6 +8,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
@@ -37,7 +38,7 @@ public class Flow extends BaseEntity {
 	// @ManyToMany(mappedBy = "flows")
 	// private List<Function> functions;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "position")
 	@Column(name = "functionId")
 	@CollectionTable(name = "flow_participants", joinColumns = @JoinColumn(name = "id"))

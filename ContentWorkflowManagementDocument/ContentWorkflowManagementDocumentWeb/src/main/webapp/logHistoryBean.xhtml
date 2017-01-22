@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="templates/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="form">
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:tabView id="manageTabs">
+
+				<p:tab title="Document Deletion" id="docDeletion">
+					<p:dataList value="#{logsHistoryBean.documentDeletionLogs}"
+						var="docDeletion" type="unordered" itemType="none"
+						paginator="true" rows="20" styleClass="paginated">
+						<f:facet name="header">
+           					 Document Deletion
+        					</f:facet>
+						<p:commandLink
+							update=":mainForm:form:manageTabs:docDeletionDetail"
+							oncomplete="PF('docDeletionDialog').show()"
+							title="Document Deletion" styleClass="ui-icon ui-icon-search"
+							style="float:left;margin-right:10px">
+							<f:setPropertyActionListener value="#{docDeletion}"
+								target="#{logsHistoryBean.selectedDocDeletion}" />
+							<h:outputText value="#{docDeletion.logActionType}" />
+						</p:commandLink>
+						<h:outputText value="#{docDeletion.logActionType}"
+							style="display:inline-block" />
+					</p:dataList>
+
+					<p:dialog header="Document Deletion" widgetVar="docDeletionDialog"
+						showEffect="blind" hideEffect="explode" resizable="false"
+						height="350" width="500">
+
+						<p:outputPanel id="docDeletionDetail" style="text-align:center;">
+							<p:panelGrid columns="2"
+								rendered="#{not empty logsHistoryBean.selectedDocDeletion}"
+								columnClasses="label,value">
+								<f:facet name="header">
+
+									<p:graphicImage library="img" name="doc.jpg" width="500"
+										height="200" />
+								</f:facet>
+
+								<h:outputText value="Action Type" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedDocDeletion.logActionType}" />
+
+								<h:outputText value="Date" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedDocDeletion.date}" />
+
+								<h:outputText value="User Name" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedDocDeletion.userDTO.userName}" />
+
+
+								<h:outputText value="User Role" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedDocDeletion.userDTO.userRole}" />
+
+							</p:panelGrid>
+						</p:outputPanel>
+					</p:dialog>
+
+				</p:tab>
+
+
+
+
+				<!-- USER_CREAION -->
+				<p:tab title="User Creation" id="userCreation">
+					<p:dataList value="#{logsHistoryBean.userCreationLogs}"
+						var="userCreation" type="unordered" itemType="none"
+						paginator="true" rows="20" styleClass="paginated">
+						<f:facet name="header">
+           					 User Creation
+        					</f:facet>
+						<p:commandLink
+							update=":mainForm:form:manageTabs:userCreationDetail"
+							oncomplete="PF('userCreationDialog').show()"
+							title="Document Deletion" styleClass="ui-icon ui-icon-search"
+							style="float:left;margin-right:10px">
+							<f:setPropertyActionListener value="#{userCreation}"
+								target="#{logsHistoryBean.selectUserCreation}" />
+							<h:outputText value="#{userCreation.logActionType}" />
+						</p:commandLink>
+						<h:outputText value="#{userCreation.logActionType}"
+							style="display:inline-block" />
+					</p:dataList>
+
+					<p:dialog header="User Creation" widgetVar="userCreationDialog"
+						showEffect="blind" hideEffect="explode" resizable="false"
+						height="350" width="500">
+
+						<p:outputPanel id="userCreationDetail" style="text-align:center;">
+							<p:panelGrid columns="2"
+								rendered="#{not empty logsHistoryBean.selectUserCreation}"
+								columnClasses="label,value">
+								<f:facet name="header">
+
+									<p:graphicImage library="img" name="doc.jpg" width="500"
+										height="200" />
+								</f:facet>
+
+								<h:outputText value="Action Type" />
+								<h:outputText
+									value="#{logsHistoryBean.selectUserCreation.logActionType}" />
+
+								<h:outputText value="Date" />
+								<h:outputText value="#{logsHistoryBean.selectUserCreation.date}" />
+
+								<h:outputText value="User Name" />
+								<h:outputText
+									value="#{logsHistoryBean.selectUserCreation.userDTO.userName}" />
+
+
+								<h:outputText value="User Role" />
+								<h:outputText
+									value="#{logsHistoryBean.selectUserCreation.userDTO.userRole}" />
+
+							</p:panelGrid>
+						</p:outputPanel>
+					</p:dialog>
+
+				</p:tab>
+
+
+
+				<!--PASSWORD_RESET  -->
+				<p:tab title="Password Reset" id="passwordReset">
+					<p:dataList value="#{logsHistoryBean.passwordResetLogs}"
+						var="passReset" type="unordered" itemType="none" paginator="true"
+						rows="20" styleClass="paginated">
+						<f:facet name="header">
+           					 Password Reset
+        					</f:facet>
+						<p:commandLink update=":mainForm:form:manageTabs:passResetDetail"
+							oncomplete="PF('passwordDialog').show()"
+							title="Document Deletion" styleClass="ui-icon ui-icon-search"
+							style="float:left;margin-right:10px">
+							<f:setPropertyActionListener value="#{passReset}"
+								target="#{logsHistoryBean.selectedPasswordReset}" />
+							<h:outputText value="#{passReset.logActionType}" />
+						</p:commandLink>
+						<h:outputText value="#{passReset.logActionType}"
+							style="display:inline-block" />
+					</p:dataList>
+
+					<p:dialog header="Password reset" widgetVar="passwordDialog"
+						showEffect="blind" hideEffect="explode" resizable="false"
+						height="350" width="500">
+
+						<p:outputPanel id="passResetDetail" style="text-align:center;">
+							<p:panelGrid columns="2"
+								rendered="#{not empty logsHistoryBean.selectedPasswordReset}"
+								columnClasses="label,value">
+								<f:facet name="header">
+
+									<p:graphicImage library="img" name="doc.jpg" width="500"
+										height="200" />
+								</f:facet>
+
+								<h:outputText value="Action Type" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedPasswordReset.logActionType}" />
+
+								<h:outputText value="Date" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedPasswordReset.date}" />
+
+								<h:outputText value="User Name" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedPasswordReset.userDTO.userName}" />
+
+
+								<h:outputText value="User Role" />
+								<h:outputText
+									value="#{logsHistoryBean.selectedPasswordReset.userDTO.userRole}" />
+
+							</p:panelGrid>
+						</p:outputPanel>
+					</p:dialog>
+
+				</p:tab>
+
+			</p:tabView>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
