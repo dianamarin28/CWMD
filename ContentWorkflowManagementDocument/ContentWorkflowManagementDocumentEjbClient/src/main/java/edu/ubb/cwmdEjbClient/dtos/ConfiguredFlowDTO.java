@@ -1,6 +1,7 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ConfiguredFlowDTO implements Serializable{
 	
@@ -11,7 +12,7 @@ public class ConfiguredFlowDTO implements Serializable{
 
 	private String uuid;
 	
-	private FlowDTO flow;
+	private List<FlowDTO> flows;
 	
 	private String p1;
 
@@ -35,12 +36,12 @@ public class ConfiguredFlowDTO implements Serializable{
 		this.uuid = uuid;
 	}
 
-	public FlowDTO getFlow() {
-		return flow;
+	public List<FlowDTO> getFlows() {
+		return flows;
 	}
 
-	public void setFlow(FlowDTO flow) {
-		this.flow = flow;
+	public void setFlows(List<FlowDTO> flows) {
+		this.flows = flows;
 	}
 
 	public String getP1() {

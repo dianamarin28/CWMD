@@ -68,6 +68,21 @@ public class ActiveFlowBean implements Serializable, ActiveFlowBeanInterface {
 	}
 
 	@Override
+	public List<ActiveFlowDTO> getActiveByStep(Long userId) throws RemoteException {
+		try {
+			List<ActiveFlowDTO> activeFlowDTOs = new ArrayList<>();
+			List<ActiveFlow> activeFlows = activeFlowDAO.getActiveByStep(userId);
+			for (ActiveFlow af : activeFlows) {
+				activeFlowDTOs.add(activeFlowAssembler.modelToDto(af));
+			}
+			return activeFlowDTOs;
+		} catch (DaoException e) {
+			logger.error("Get active flows active by user id error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public List<ActiveFlowDTO> getFinishedByUserId(Long userId) throws RemoteException {
 		try {
 			List<ActiveFlowDTO> activeFlowDTOs = new ArrayList<>();
@@ -150,4 +165,31 @@ public class ActiveFlowBean implements Serializable, ActiveFlowBeanInterface {
 		}
 	}
 
+	@Override
+	public void rejectActiveFlow(ActiveFlowDTO activeFlowDto) throws RemoteException {
+		ActiveFlow activeFlow = activeFlowAssembler.dtoToModel(activeFlowDto);
+
+		try {
+			activeFlowDAO.rejectActiveFlow(activeFlow);
+
+		} catch (DaoException e) {
+			logger.error("reject active flow error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void approveActiveFlow(ActiveFlowDTO activeFlowDto) throws RemoteException {
+		ActiveFlow activeFlow = activeFlowAssembler.dtoToModel(activeFlowDto);
+
+		try {
+			activeFlowDAO.approveActiveFlow(activeFlow);
+
+		} catch (DaoException e) {
+			logger.error("approve active flow error " + e);
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	
 }

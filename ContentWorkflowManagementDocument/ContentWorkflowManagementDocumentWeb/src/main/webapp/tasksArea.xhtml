@@ -10,40 +10,57 @@
 
 	<ui:define name="content">
 
-		<h:form id="initiatedTasksAreaForm">
+		<h:form id="tasksAreaForm">
 			<p:growl id="msgs" showDetail="true" />
 
 			<h:panelGrid columns="2">
 				<p:outputLabel for="selectActiveFlow" value="Select active flow" />
 				<p:selectOneMenu id="selectActiveFlow"
-					value="#{initiatedTasksAreaBean.selectedActiveFlow}"
+					value="#{tasksAreaBean.selectedActiveFlow}"
 					converter="activeFlowConverter">
-					<p:ajax listener="#{initiatedTasksAreaBean.setValues}"
+					<p:ajax listener="#{tasksAreaBean.setValues}"
 						update="viewVersions" />
 					<f:selectItem itemLabel="Select an active flow" itemValue="#{null}"
 						noSelectionOption="true" />
-					<f:selectItems value="#{initiatedTasksAreaBean.activeFlowDTOs}"
+					<f:selectItems value="#{tasksAreaBean.activeFlowDTOs}"
 						var="activeFlow" itemLabel="#{activeFlow.name}"
 						itemValue="#{activeFlow}" />
 				</p:selectOneMenu>
 			</h:panelGrid>
 
-			<p:dataList id="viewVersions"
-				value="#{initiatedTasksAreaBean.versionDTOs}" var="version"
+			<p:dataTable id="viewVersions"
+				value="#{tasksAreaBean.versionDTOs}" var="version"
 				type="unordered" itemType="none" paginator="true" rows="10"
 				styleClass="paginated">
-				<f:facet name="header">Documents in active flow</f:facet>
-				<p:commandLink
-					update="mainForm:initiatedTasksAreaForm:versionDetail"
-					oncomplete="PF('versionDialog').show()" title="Version Detail"
-					styleClass="ui-icon ui-icon-search"
-					style="float:left;margin-right:10px">
-					<f:setPropertyActionListener value="#{version}"
-						target="#{initiatedTasksAreaBean.version}" />
-					<h:outputText value="#{version.fileName}, #{version.document.name}" />
-				</p:commandLink>
-				<h:outputText value="#{version.fileName}, #{version.document.name}" />
-			</p:dataList>
+				<f:facet name="header">Documents in active flow that require Action</f:facet>
+				<p:column>
+					<p:commandLink
+						update="mainForm:tasksAreaForm:versionDetail"
+						oncomplete="PF('versionDialog').show()" title="Version Detail"
+						styleClass="ui-icon ui-icon-search"
+						style="float:left;margin-right:10px">
+						<f:setPropertyActionListener value="#{version}"
+							target="#{tasksAreaBean.version}" />
+						<h:outputText value="#{version.fileName}, #{version.document.name}" />
+					</p:commandLink>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{version.fileName}, #{version.document.name}" style="padding-bottom:10px;" />
+				</p:column>
+				<p:column>
+					<p:commandButton icon="fa fa-remove" style="float:right;height:30px;width:30px;" 
+									 process="@this,viewVersions"
+							actionListener="#{tasksAreaBean.rejectVersionDTO(version)}"
+							update="#{p:component('msgs')}">
+					</p:commandButton>
+				</p:column>
+				<p:column>
+					<p:commandButton icon="fa fa-check" style="float:right;height:30px;width:30px;"
+					process="@this,viewVersions"
+							actionListener="#{tasksAreaBean.approveVersionDTO(version)}"
+							update="#{p:component('msgs')}"></p:commandButton>
+				</p:column>
+			</p:dataTable>
 
 			<p:dialog header="Version Info" widgetVar="versionDialog"
 				showEffect="blind" hideEffect="explode" resizable="false">
@@ -52,27 +69,27 @@
 
 						<h:outputText for="docName" value="Document name" />
 						<h:outputText id="docName"
-							value="#{initiatedTasksAreaBean.version.document.name}" />
+							value="#{tasksAreaBean.version.document.name}" />
 
 						<h:outputText for="fileName" value="File name" />
 						<h:outputText id="fileName"
-							value="#{initiatedTasksAreaBean.version.fileName}" />
+							value="#{tasksAreaBean.version.fileName}" />
 
 						<h:outputText for="status" value="Status" />
 						<h:outputText id="status"
-							value="#{initiatedTasksAreaBean.version.status}" />
+							value="#{tasksAreaBean.version.status}" />
 
 						<h:outputText for="number" value="Version" />
 						<h:outputText id="number"
-							value="#{initiatedTasksAreaBean.version.number}" />
+							value="#{tasksAreaBean.version.number}" />
 
 						<h:outputText for="lastModDate" value="Last modification date" />
 						<h:outputText id="lastModDate"
-							value="#{initiatedTasksAreaBean.version.document.lastModficationDate}" />
+							value="#{tasksAreaBean.version.document.lastModficationDate}" />
 
 						<h:outputText for="author" value="Author's user name" />
 						<h:outputText id="author"
-							value="#{initiatedTasksAreaBean.version.document.author.userName}" />
+							value="#{tasksAreaBean.version.document.author.userName}" />
 
 					</p:panelGrid>
 				</p:outputPanel>

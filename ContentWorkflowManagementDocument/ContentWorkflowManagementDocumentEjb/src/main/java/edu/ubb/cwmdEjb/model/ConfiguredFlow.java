@@ -18,37 +18,36 @@ public class ConfiguredFlow extends BaseEntity{
 	
 	private static final long serialVersionUID = -2502548668979454934L;
 
-	@JoinColumn(name = "flowId")
-	@ManyToOne
-	private Flow flow;
+	@OneToMany(mappedBy = "configuredFlow")
+	private List<Flow> flows;
 	
-	@Column(name = "P1", nullable = false)
+	@Column(name = "p1", nullable = false)
 	private String p1;
 
-	@Column(name = "P2", nullable = false)
+	@Column(name = "p2", nullable = false)
 	private String p2;
 	
-	@Column(name = "P3", nullable = true)
+	@Column(name = "p3", nullable = true)
 	private String p3;
 	
-	@Column(name = "P4", nullable = true)
+	@Column(name = "p4", nullable = true)
 	private String p4;
 	
-	@Column(name = "P5", nullable = true)
+	@Column(name = "p5", nullable = true)
 	private String p5;
 	
-	@Column(name = "P6", nullable = true)
+	@Column(name = "p6", nullable = true)
 	private String p6;
 	
-	@Column(name = "P7", nullable = true)
+	@Column(name = "p7", nullable = true)
 	private String p7;
 
-	public Flow getFlow() {
-		return flow;
+	public List<Flow> getFlows() {
+		return flows;
 	}
 
-	public void setFlow(Flow flow) {
-		this.flow = flow;
+	public void setFlows(List<Flow> flows) {
+		this.flows = flows;
 	}
 
 	public String getP1() {

@@ -23,7 +23,7 @@
 					<f:selectItem itemLabel="Select an active flow" itemValue="#{null}"
 						noSelectionOption="true" />
 					<f:selectItems value="#{finishedTasksAreaBean.activeFlowDTOs}"
-						var="activeFlow" itemLabel="#{activeFlow.activeFlowId}"
+						var="activeFlow" itemLabel="#{activeFlow.name}"
 						itemValue="#{activeFlow}" />
 				</p:selectOneMenu>
 			</h:panelGrid>

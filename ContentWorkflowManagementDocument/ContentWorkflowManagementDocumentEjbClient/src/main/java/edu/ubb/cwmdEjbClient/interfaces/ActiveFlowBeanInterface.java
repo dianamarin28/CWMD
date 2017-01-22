@@ -17,6 +17,8 @@ public interface ActiveFlowBeanInterface {
 
 	List<ActiveFlowDTO> getFinishedByUserId(Long userId) throws RemoteException;
 
+	List<ActiveFlowDTO> getActiveByStep(Long userId) throws RemoteException;
+
 	List<ActiveFlowDTO> getActiveForAdministrator(Long userId) throws RemoteException;
 
 	List<ActiveFlowDTO> getFinishedForAdministrator(Long userId) throws RemoteException;
@@ -26,5 +28,8 @@ public interface ActiveFlowBeanInterface {
 	Long createActiveFlow(UserDTO usertDTO, FlowDTO flowDTO, String flowName) throws RemoteException;
 
 	void insertActiveFlow(ActiveFlowDTO activeFlowDTO) throws RemoteException;
+	
+	void rejectActiveFlow(ActiveFlowDTO activeFlowDto) throws RemoteException;
 
+	void approveActiveFlow(ActiveFlowDTO activeFlowDto) throws RemoteException;
 }

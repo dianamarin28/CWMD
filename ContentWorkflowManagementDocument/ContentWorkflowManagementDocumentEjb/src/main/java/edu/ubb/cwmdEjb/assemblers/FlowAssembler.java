@@ -26,6 +26,8 @@ public class FlowAssembler {
 			flow.setName(flowDto.getName());
 			flow.setNoOfParticipants(flowDto.getNoOfParticipants());
 
+			ConfiguredFlowAssembler configuredFlowAssembler = new ConfiguredFlowAssembler();
+			flow.setConfiguredFlow(configuredFlowAssembler.dtoToModelSimple(flowDto.getConfiguredFlow()));
 // FunctionAssembler functionAssembler = new FunctionAssembler();
 			flow.setParticipants(flowDto.getParticipants());
 			// List<Function> functions = new ArrayList<>();
@@ -43,15 +45,7 @@ public class FlowAssembler {
 			}
 			flow.setActiveFlows(activeFlows);
 
-			ConfiguredFlowAssembler configuredFlowAssembler = new ConfiguredFlowAssembler();
-			List<ConfiguredFlow> configuredFlows = new ArrayList<>();
-			if (flowDto.getConfiguredFlows() != null) {
-				for (ConfiguredFlowDTO configuredFlowDto : flowDto.getConfiguredFlows()) {
-					configuredFlows.add(configuredFlowAssembler.dtoToModelSimple(configuredFlowDto));
-				}
-			}
-			flow.setConfiguredFlows(configuredFlows);
-
+			
 			
 			return flow;
 		}
@@ -68,6 +62,8 @@ public class FlowAssembler {
 			flow.setName(flowDto.getName());
 			flow.setNoOfParticipants(flowDto.getNoOfParticipants());
 
+			ConfiguredFlowAssembler configuredFlowAssembler = new ConfiguredFlowAssembler();
+			flow.setConfiguredFlow(configuredFlowAssembler.dtoToModelSimple(flowDto.getConfiguredFlow()));
 
 			// the map of functions is not set
 
@@ -88,6 +84,8 @@ public class FlowAssembler {
 			flowDto.setName(flow.getName());
 			flowDto.setNoOfParticipants(flow.getNoOfParticipants());
 
+			ConfiguredFlowAssembler configuredFlowAssembler = new ConfiguredFlowAssembler();
+			flowDto.setConfiguredFlow(configuredFlowAssembler.modelToDtoSimple(flow.getConfiguredFlow()));
 
 			flowDto.setParticipants(flow.getParticipants());
 
@@ -107,15 +105,7 @@ public class FlowAssembler {
 			}
 			flowDto.setActiveFlows(activeFlows);
 
-			ConfiguredFlowAssembler configuredFlowAssembler = new ConfiguredFlowAssembler();
-			List<ConfiguredFlowDTO> configuredFlowDtos = new ArrayList<>();
-			if (flow.getConfiguredFlows() != null) {
-				for (ConfiguredFlow configuredFlow : flow.getConfiguredFlows()) {
-					configuredFlowDtos.add(configuredFlowAssembler.modelToDtoSimple(configuredFlow));
-				}
-			}
-			flowDto.setConfiguredFlows(configuredFlowDtos);
-
+			
 			
 			return flowDto;
 		}
@@ -131,6 +121,9 @@ public class FlowAssembler {
 			flowDto.setFlowId(flow.getId());
 			flowDto.setName(flow.getName());
 			flowDto.setNoOfParticipants(flow.getNoOfParticipants());
+
+			ConfiguredFlowAssembler configuredFlowAssembler = new ConfiguredFlowAssembler();
+			flowDto.setConfiguredFlow(configuredFlowAssembler.modelToDtoSimple(flow.getConfiguredFlow()));
 
 			// the map of functions is not set
 

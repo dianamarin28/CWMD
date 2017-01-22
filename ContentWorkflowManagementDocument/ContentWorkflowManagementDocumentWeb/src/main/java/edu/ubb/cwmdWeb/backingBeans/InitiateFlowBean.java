@@ -184,7 +184,7 @@ public class InitiateFlowBean implements Serializable {
 		activeFlowDTO.setVersions(selectedVersions);
 		activeFlowDTO.setUser(userDTO);
 
-		activeFlowDTO.setStep("1");
+		activeFlowDTO.setStep("p2");
 
 		try {
 			activeFlowBeanInterface.insertActiveFlow(activeFlowDTO);

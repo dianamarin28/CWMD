@@ -86,7 +86,7 @@
 							value="Please select the users that you want to add as participants to the flow" />
 						<p:pickList id="pickUsers"
 							value="#{initiateFlowBean.dualListUsersFromDepartment}"
-							var="user" itemLabel="#{user.userName} - #{user.function.type}"
+							var="user" itemLabel="#{user.function.type}"
 							itemValue="#{user}" converter="userConverter" />
 
 						<p:commandButton value="Submit"
@@ -120,7 +120,7 @@
 							value="#{initiateFlowBean.listSelectedUsers}" var="user"
 							type="ordered">
 							<f:facet name="header">Selected users</f:facet>
-							<h:outputText value="#{user.userName} - #{user.function.type}" />
+							<h:outputText value="#{user.function.type}" />
 						</p:dataList>
 
 						<h:commandButton value="Start Flow"

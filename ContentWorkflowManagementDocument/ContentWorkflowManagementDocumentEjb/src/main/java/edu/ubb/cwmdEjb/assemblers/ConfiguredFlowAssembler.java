@@ -1,7 +1,12 @@
 package edu.ubb.cwmdEjb.assemblers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.ubb.cwmdEjb.model.ConfiguredFlow;
 import edu.ubb.cwmdEjbClient.dtos.ConfiguredFlowDTO;
+import edu.ubb.cwmdEjb.model.Flow;
+import edu.ubb.cwmdEjbClient.dtos.FlowDTO;
 
 public class ConfiguredFlowAssembler {
 
@@ -16,10 +21,6 @@ public class ConfiguredFlowAssembler {
 
 			configuredFlow.setUuid(configuredFlowDto.getUuid());
 			configuredFlow.setId(configuredFlowDto.getConfiguredFlowId());
-
-			FlowAssembler flowAssembler = new FlowAssembler();
-			configuredFlow.setFlow(flowAssembler.dtoToModelSimple(configuredFlowDto.getFlow()));
-
 			
 			configuredFlow.setP1(configuredFlowDto.getP1());
 			configuredFlow.setP2(configuredFlowDto.getP2());
@@ -29,6 +30,14 @@ public class ConfiguredFlowAssembler {
 			configuredFlow.setP6(configuredFlowDto.getP6());
 			configuredFlow.setP7(configuredFlowDto.getP7());
 			
+			FlowAssembler flowAssembler = new FlowAssembler();
+			List<Flow> flows = new ArrayList<>();
+			if (configuredFlowDto.getFlows() != null) {
+				for (FlowDTO flowDto : configuredFlowDto.getFlows()) {
+					flows.add(flowAssembler.dtoToModel(flowDto));
+				}
+			}
+			configuredFlow.setFlows(flows);			
 
 			return configuredFlow;
 		}
@@ -43,9 +52,6 @@ public class ConfiguredFlowAssembler {
 			configuredFlow.setUuid(configuredFlowDto.getUuid());
 			configuredFlow.setId(configuredFlowDto.getConfiguredFlowId());
 
-			FlowAssembler flowAssembler = new FlowAssembler();
-			configuredFlow.setFlow(flowAssembler.dtoToModelSimple(configuredFlowDto.getFlow()));
-			
 			configuredFlow.setP1(configuredFlowDto.getP1());
 			configuredFlow.setP2(configuredFlowDto.getP2());
 			configuredFlow.setP3(configuredFlowDto.getP3());
@@ -70,9 +76,6 @@ public class ConfiguredFlowAssembler {
 
 			configuredFlowDto.setUuid(configuredFlow.getUuid());
 			configuredFlowDto.setConfiguredFlowId(configuredFlow.getId());
-
-			FlowAssembler flowAssembler = new FlowAssembler();
-			configuredFlowDto.setFlow(flowAssembler.modelToDtoSimple(configuredFlow.getFlow()));
 			
 			configuredFlowDto.setP1(configuredFlow.getP1());
 			configuredFlowDto.setP2(configuredFlow.getP2());
@@ -82,6 +85,14 @@ public class ConfiguredFlowAssembler {
 			configuredFlowDto.setP6(configuredFlow.getP6());
 			configuredFlowDto.setP7(configuredFlow.getP7());
 			
+			FlowAssembler flowAssembler = new FlowAssembler();
+			List<FlowDTO> flowDtos = new ArrayList<>();
+			if (configuredFlow.getFlows() != null) {
+				for (Flow flow : configuredFlow.getFlows()) {
+					flowDtos.add(flowAssembler.modelToDtoSimple(flow));
+				}
+			}
+			configuredFlowDto.setFlows(flowDtos);
 			return configuredFlowDto;
 		}
 	}
@@ -94,9 +105,6 @@ public class ConfiguredFlowAssembler {
 
 			configuredFlowDto.setUuid(configuredFlow.getUuid());
 			configuredFlowDto.setConfiguredFlowId(configuredFlow.getId());
-
-			FlowAssembler flowAssembler = new FlowAssembler();
-			configuredFlowDto.setFlow(flowAssembler.modelToDtoSimple(configuredFlow.getFlow()));
 			
 			configuredFlowDto.setP1(configuredFlow.getP1());
 			configuredFlowDto.setP2(configuredFlow.getP2());
