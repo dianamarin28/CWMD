@@ -214,6 +214,12 @@ public class ActiveFlowDAO {
 		try {
 			entityManager.persist(activeFlow);
 			entityManager.flush();
+			
+			for (Version version : activeFlow.getVersions()) {
+				version.setActiveFlow(activeFlow);
+				versionDao.updateVersion(version);
+			}
+			
 		} catch (PersistenceException e) {
 			logger.error("Active flow insertion failed", e);
 			throw new DaoException("Active flow insertion failed", e);
