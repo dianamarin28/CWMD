@@ -1,6 +1,5 @@
 package edu.ubb.cwmdEjb.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -118,20 +117,12 @@ public class VersionDAO {
 
 	public List<Version> getAllVersionsOfDocument(Long documentId) throws DaoException {
 		try {
-			// TypedQuery<Version> query = entityManager
-			// .createQuery("SELECT v FROM Version v JOIN v.document d WHERE
-			// d.id = :documentId", Version.class);
-			// query.setParameter("documentId", documentId);
-			// List<Version> versions = query.getResultList();
-			List<Version> versions = getVersions();
-			List<Version> validVersions = new ArrayList<>();
-			for (Version v : versions) {
-				if (v.getDocument().getId().equals(documentId)) {
-					validVersions.add(v);
-				}
-			}
+			TypedQuery<Version> query = entityManager
+					.createQuery("SELECT v FROM Version v JOIN v.document d WHERE d.id = :documentId", Version.class);
+			query.setParameter("documentId", documentId);
+			List<Version> versions = query.getResultList();
 
-			return validVersions;
+			return versions;
 		} catch (PersistenceException e) {
 			logger.error("Versions retrieval by document id failed", e);
 			throw new DaoException("Version retrieval by document id failed", e);

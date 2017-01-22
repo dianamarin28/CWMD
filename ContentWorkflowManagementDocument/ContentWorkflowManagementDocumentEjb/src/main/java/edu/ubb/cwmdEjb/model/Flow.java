@@ -8,6 +8,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
@@ -15,8 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.annotations.CacheType;
+
 @Entity
 @Table(name = "flow")
+@Cache(type = CacheType.NONE)
 public class Flow extends BaseEntity {
 
 	private static final long serialVersionUID = -1655899541673186225L;
@@ -27,14 +32,13 @@ public class Flow extends BaseEntity {
 	@Column(name = "noOfParticipants", nullable = false)
 	private int noOfParticipants;
 
-	@JoinColumn(name = "configuredFlowId")
-	@OneToOne
-	private ConfiguredFlow configuredFlow;
+	@OneToMany(mappedBy = "flow")
+	private List<ConfiguredFlow> configuredFlows;
 	
 	// @ManyToMany(mappedBy = "flows")
 	// private List<Function> functions;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "position")
 	@Column(name = "functionId")
 	@CollectionTable(name = "flow_participants", joinColumns = @JoinColumn(name = "id"))
@@ -55,14 +59,15 @@ public class Flow extends BaseEntity {
 		this.name = name;
 	}
 
-	public ConfiguredFlow getConfiguredFlow() {
-		return configuredFlow;
+	
+	public List<ConfiguredFlow> getConfiguredFlows() {
+		return configuredFlows;
 	}
 
-	public void setConfiguredFlow(ConfiguredFlow configuredFlow) {
-		this.configuredFlow = configuredFlow;
+	public void setConfiguredFlows(List<ConfiguredFlow> configuredFlows) {
+		this.configuredFlows = configuredFlows;
 	}
-	
+
 	public List<ActiveFlow> getActiveFlows() {
 		return activeFlows;
 	}

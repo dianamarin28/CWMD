@@ -1,6 +1,7 @@
 package edu.ubb.cwmdEjbClient.dtos;
 
 import java.util.List;
+import java.util.Map;
 
 public class ActiveFlowDTO {
 
@@ -19,6 +20,8 @@ public class ActiveFlowDTO {
 	private String status;
 
 	private String step;
+
+	Map<String, Long> participants;
 
 	@Override
 	public int hashCode() {
@@ -107,6 +110,14 @@ public class ActiveFlowDTO {
 
 	public void setStep(String step) {
 		this.step = step;
+	}
+
+	public Map<String, Long> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(Map<String, Long> participants) {
+		this.participants = participants;
 	}
 
 }

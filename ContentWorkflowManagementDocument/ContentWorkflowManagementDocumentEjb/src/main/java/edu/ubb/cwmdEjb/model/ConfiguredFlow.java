@@ -19,7 +19,7 @@ public class ConfiguredFlow extends BaseEntity{
 	private static final long serialVersionUID = -2502548668979454934L;
 
 	@JoinColumn(name = "flowId")
-	@OneToOne()
+	@ManyToOne
 	private Flow flow;
 	
 	@Column(name = "P1", nullable = false)

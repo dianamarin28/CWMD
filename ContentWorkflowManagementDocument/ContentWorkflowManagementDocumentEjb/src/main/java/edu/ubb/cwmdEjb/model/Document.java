@@ -33,7 +33,7 @@ public class Document extends BaseEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Template template;
 
-	@OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "document")
 	private List<Version> version;
 
 	@Column(name = "creationDate", nullable = false)

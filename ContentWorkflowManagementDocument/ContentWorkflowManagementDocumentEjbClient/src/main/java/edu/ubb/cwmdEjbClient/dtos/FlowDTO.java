@@ -13,15 +13,40 @@ public class FlowDTO implements Serializable {
 	private String uuid;
 
 	private String name;
-	
+
 	private int noOfParticipants;
 
-	private ConfiguredFlowDTO configuredFlow;
+	private List<ConfiguredFlowDTO> configuredFlows;
 	// private List<FunctionDTO> functions;
 
 	Map<String, Long> participants;
 
 	private List<ActiveFlowDTO> activeFlows;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((flowId == null) ? 0 : flowId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FlowDTO other = (FlowDTO) obj;
+		if (flowId == null) {
+			if (other.flowId != null)
+				return false;
+		} else if (!flowId.equals(other.flowId))
+			return false;
+		return true;
+	}
 
 	public String getName() {
 		return name;
@@ -31,12 +56,12 @@ public class FlowDTO implements Serializable {
 		this.name = name;
 	}
 
-	public ConfiguredFlowDTO getConfiguredFlow() {
-		return configuredFlow;
+	public List<ConfiguredFlowDTO> getConfiguredFlows() {
+		return configuredFlows;
 	}
 
-	public void setConfiguredFlow(ConfiguredFlowDTO configuredFlow) {
-		this.configuredFlow = configuredFlow;
+	public void setConfiguredFlows(List<ConfiguredFlowDTO> configuredFlows) {
+		this.configuredFlows = configuredFlows;
 	}
 
 	public List<ActiveFlowDTO> getActiveFlows() {
